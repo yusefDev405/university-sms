@@ -4,11 +4,19 @@ import { ModalDialog } from '../../components/ModalDialog.jsx';
 import { ResponsiveTable } from '../../components/ResponsiveTable.jsx';
 import { StatusBadge } from '../../components/StatusBadge.jsx';
 import { formatMeetings } from '../../utils/schedule.js';
+import { AdminAdmissionsPanel } from './AdminAdmissionsPanel.jsx';
+import { AdminAnalyticsPanel } from './AdminAnalyticsPanel.jsx';
+import { AdminCampusPanel } from './AdminCampusPanel.jsx';
+import { AdminFinancePetitionsPanel } from './AdminFinancePetitionsPanel.jsx';
 
 const TABS = [
   { id: 'users', label: 'Users & Students' },
   { id: 'courses', label: 'Courses & Prerequisites' },
   { id: 'terms', label: 'Terms & Offerings' },
+  { id: 'campus', label: 'Rooms, Exams & Calendar' },
+  { id: 'admissions', label: 'Admissions & Graduation' },
+  { id: 'finance', label: 'Finance & Petitions' },
+  { id: 'analytics', label: 'Executive Analytics' },
   { id: 'reports', label: 'Reports & Audit Log' },
   { id: 'import', label: 'CSV Bulk Import' }
 ];
@@ -836,6 +844,41 @@ export function AdminPage({ notify }) {
               </button>
             </div>
           </div>
+        </div>
+      ) : null}
+
+      {!loading && activeTab === 'campus' ? (
+        <div role="tabpanel" aria-labelledby="tab-campus" className="tabpanel-inner">
+          <AdminCampusPanel offerings={offerings} terms={terms} notify={notify} />
+        </div>
+      ) : null}
+
+      {!loading && activeTab === 'admissions' ? (
+        <div role="tabpanel" aria-labelledby="tab-admissions" className="tabpanel-inner">
+          <AdminAdmissionsPanel
+            departments={departments}
+            students={students}
+            courses={courses}
+            notify={notify}
+            onRefreshMain={loadAll}
+          />
+        </div>
+      ) : null}
+
+      {!loading && activeTab === 'finance' ? (
+        <div role="tabpanel" aria-labelledby="tab-finance" className="tabpanel-inner">
+          <AdminFinancePetitionsPanel
+            terms={terms}
+            students={students}
+            notify={notify}
+            onRefreshMain={loadAll}
+          />
+        </div>
+      ) : null}
+
+      {!loading && activeTab === 'analytics' ? (
+        <div role="tabpanel" aria-labelledby="tab-analytics" className="tabpanel-inner">
+          <AdminAnalyticsPanel notify={notify} />
         </div>
       ) : null}
 

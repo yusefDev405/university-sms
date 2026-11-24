@@ -48,6 +48,9 @@ export function mapPgError(err) {
     if (msg.includes('Prerequisites not met')) {
       return new AppError(409, 'PREREQUISITES_NOT_MET', 'Prerequisites not met');
     }
+    if (msg.includes('Corequisites not met')) {
+      return new AppError(409, 'COREQUISITES_NOT_MET', 'Corequisites not met (enroll concurrently or complete the corequisite first)');
+    }
     if (msg.includes('Schedule conflict')) {
       return new AppError(409, 'SCHEDULE_CONFLICT', 'Schedule conflict with an existing enrolled course');
     }

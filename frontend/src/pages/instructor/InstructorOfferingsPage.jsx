@@ -5,16 +5,23 @@ import { ResponsiveTable } from '../../components/ResponsiveTable.jsx';
 import { StatusBadge } from '../../components/StatusBadge.jsx';
 import { DAY_NAMES, formatMeetings } from '../../utils/schedule.js';
 
-const GRADE_LETTERS = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
+const GRADE_LETTERS = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F', 'I', 'P', 'NP'];
 const ATTENDANCE_STATUSES = ['present', 'late', 'absent', 'excused'];
 
 export function InstructorOfferingsPage({ notify }) {
   const [offerings, setOfferings] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
-  const [subTab, setSubTab] = useState('roster'); // 'roster' | 'attendance'
+  const [subTab, setSubTab] = useState('roster'); // 'roster' | 'gradebook' | 'attendance' | 'announcements'
   const [roster, setRoster] = useState([]);
   const [distInfo, setDistInfo] = useState({ distribution: [], gradedCount: 0, averagePoints: null });
   const [draftGrades, setDraftGrades] = useState({});
+  const [gradebook, setGradebook] = useState(null);
+  const [scoreDrafts, setScoreDrafts] = useState({});
+  const [assessForm, setAssessForm] = useState({ title: '', category: 'quiz', weightPct: 10, maxScore: 100, dueDate: '' });
+  const [announcements, setAnnouncements] = useState([]);
+  const [evalSummary, setEvalSummary] = useState(null);
+  const [annForm, setAnnForm] = useState({ title: '', body: '' });
+  const [syllabusDraft, setSyllabusDraft] = useState('');
   const [attendanceData, setAttendanceData] = useState({ sessions: [], summary: [] });
   const [sessionDate, setSessionDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [sessionTopic, setSessionTopic] = useState('');
@@ -30,10 +37,13 @@ export function InstructorOfferingsPage({ notify }) {
     setRosterLoading(true);
     setError('');
     try {
-      const [rosterRes, distRes, attRes] = await Promise.all([
+      const [rosterRes, distRes, attRes, gbRes, annRes, evRes] = await Promise.all([
         apiRequest(`/offerings/${offeringId}/roster`),
         apiRequest(`/offerings/${offeringId}/grade-distribution`),
-        apiRequest(`/offerings/${offeringId}/attendance`)
+        apiRequest(`/offerings/${offeringId}/attendance`),
+        apiRequest(`/offerings/${offeringId}/gradebook`),
+        apiRequest(`/offerings/${offeringId}/announcements`),
+        apiRequest(`/offerings/${offeringId}/evaluations/summary`)
       ]);
       const rows = rosterRes.data.roster || [];
       setRoster(rows);
@@ -46,6 +56,20 @@ export function InstructorOfferingsPage({ notify }) {
         sessions: attRes.data.sessions || [],
         summary: attRes.data.summary || []
       });
+      setGradebook(gbRes.data || null);
+      setSyllabusDraft(gbRes.data?.offering?.syllabus_summary || '');
+      setAnnouncements(annRes.data || []);
+      setEvalSummary(evRes.data || null);
+
+      const sDrafts = {};
+      for (const st of gbRes.data?.students || []) {
+        sDrafts[st.student_id] = {};
+        for (const a of gbRes.data?.assessments || []) {
+          const val = st.scores?.[a.id]?.score;
+          sDrafts[st.student_id][a.id] = val !== null && val !== undefined ? String(val) : '';
+        }
+      }
+      setScoreDrafts(sDrafts);
 
       const drafts = {};
       const attDrafts = {};
@@ -166,6 +190,94 @@ export function InstructorOfferingsPage({ notify }) {
       notify(err.message, 'error');
     } finally {
       setSavingAttendance(false);
+    }
+  };
+
+  const handleCreateAssessment = async (e) => {
+    e.preventDefault();
+    try {
+      await apiRequest(`/offerings/${selectedId}/assessments`, {
+        method: 'POST',
+        body: {
+          title: assessForm.title,
+          category: assessForm.category,
+          weightPct: Number(assessForm.weightPct),
+          maxScore: Number(assessForm.maxScore),
+          dueDate: assessForm.dueDate || null
+        }
+      });
+      setAssessForm({ title: '', category: 'quiz', weightPct: 10, maxScore: 100, dueDate: '' });
+      notify('Assessment added to weighted gradebook.', 'success');
+      await loadOfferingDetails(selectedId);
+    } catch (err) {
+      notify(err.message, 'error');
+    }
+  };
+
+  const handleDeleteAssessment = async (assessmentId) => {
+    try {
+      await apiRequest(`/assessments/${assessmentId}`, { method: 'DELETE' });
+      notify('Assessment removed.', 'info');
+      await loadOfferingDetails(selectedId);
+    } catch (err) {
+      notify(err.message, 'error');
+    }
+  };
+
+  const handleSaveAssessmentScores = async (assessmentId) => {
+    const scores = (gradebook?.students || [])
+      .map((st) => {
+        const raw = scoreDrafts[st.student_id]?.[assessmentId];
+        if (raw === '' || raw === undefined) return null;
+        return { studentId: st.student_id, score: Number(raw) };
+      })
+      .filter(Boolean);
+    if (scores.length === 0) {
+      notify('Enter at least one score first.', 'error');
+      return;
+    }
+    try {
+      await apiRequest(`/assessments/${assessmentId}/scores`, { method: 'PUT', body: { scores } });
+      notify('Assessment scores saved.', 'success');
+      await loadOfferingDetails(selectedId);
+    } catch (err) {
+      notify(err.message, 'error');
+    }
+  };
+
+  const handleComputeFinalGrades = async () => {
+    try {
+      const res = await apiRequest(`/offerings/${selectedId}/grades/compute-from-gradebook`, { method: 'POST' });
+      notify(`Posted ${res.data.updatedCount} weighted final grade(s).`, 'success');
+      await loadOfferingDetails(selectedId);
+    } catch (err) {
+      notify(err.message, 'error');
+    }
+  };
+
+  const handlePostAnnouncement = async (e) => {
+    e.preventDefault();
+    try {
+      await apiRequest(`/offerings/${selectedId}/announcements`, { method: 'POST', body: annForm });
+      setAnnForm({ title: '', body: '' });
+      notify('Announcement posted and enrolled students notified.', 'success');
+      await loadOfferingDetails(selectedId);
+    } catch (err) {
+      notify(err.message, 'error');
+    }
+  };
+
+  const handleSaveSyllabus = async (e) => {
+    e.preventDefault();
+    try {
+      await apiRequest(`/offerings/${selectedId}/syllabus`, {
+        method: 'PATCH',
+        body: { syllabusSummary: syllabusDraft }
+      });
+      notify('Offering syllabus summary updated.', 'success');
+      await loadOfferingDetails(selectedId);
+    } catch (err) {
+      notify(err.message, 'error');
     }
   };
 
@@ -390,6 +502,16 @@ export function InstructorOfferingsPage({ notify }) {
                   <button
                     type="button"
                     role="tab"
+                    id="inst-tab-gradebook"
+                    aria-selected={subTab === 'gradebook'}
+                    className="tab-btn"
+                    onClick={() => setSubTab('gradebook')}
+                  >
+                    Weighted Gradebook ({gradebook?.assessments?.length || 0})
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
                     id="inst-tab-attendance"
                     aria-selected={subTab === 'attendance'}
                     className="tab-btn"
@@ -397,10 +519,142 @@ export function InstructorOfferingsPage({ notify }) {
                   >
                     Attendance Register ({attendanceData.sessions.length})
                   </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    id="inst-tab-announcements"
+                    aria-selected={subTab === 'announcements'}
+                    className="tab-btn"
+                    onClick={() => setSubTab('announcements')}
+                  >
+                    Syllabus &amp; Announcements
+                  </button>
                 </div>
 
                 {rosterLoading ? (
                   <p className="muted">Loading offering data…</p>
+                ) : subTab === 'gradebook' ? (
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+                      <div>
+                        <strong>Total Configured Weight: {gradebook?.totalWeightPct || 0}% / 100%</strong>
+                        <div className="weight-meter" style={{ inlineSize: '12rem', marginTop: '0.25rem' }}>
+                          <div className="weight-meter-fill" style={{ inlineSize: `${Math.min(100, gradebook?.totalWeightPct || 0)}%` }} />
+                        </div>
+                      </div>
+                      <button type="button" className="primary" onClick={handleComputeFinalGrades}>
+                        Compute &amp; Post Final Grades
+                      </button>
+                    </div>
+
+                    <form onSubmit={handleCreateAssessment} className="filter-bar">
+                      <div className="field">
+                        <label htmlFor="gb-title">New Assessment Title</label>
+                        <input id="gb-title" required value={assessForm.title} onChange={(e) => setAssessForm((f) => ({ ...f, title: e.target.value }))} />
+                      </div>
+                      <div className="field">
+                        <label htmlFor="gb-cat">Category</label>
+                        <select id="gb-cat" value={assessForm.category} onChange={(e) => setAssessForm((f) => ({ ...f, category: e.target.value }))}>
+                          {['assignment', 'quiz', 'midterm', 'project', 'final', 'participation'].map((c) => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                      </div>
+                      <div className="field">
+                        <label htmlFor="gb-wt">Weight %</label>
+                        <input id="gb-wt" type="number" min="1" max="100" required value={assessForm.weightPct} onChange={(e) => setAssessForm((f) => ({ ...f, weightPct: e.target.value }))} />
+                      </div>
+                      <div className="field">
+                        <label htmlFor="gb-max">Max Score</label>
+                        <input id="gb-max" type="number" min="1" max="1000" required value={assessForm.maxScore} onChange={(e) => setAssessForm((f) => ({ ...f, maxScore: e.target.value }))} />
+                      </div>
+                      <button type="submit">+ Add Assessment</button>
+                    </form>
+
+                    {(gradebook?.assessments || []).map((a) => (
+                      <div key={a.id} className="compact-list-item" style={{ display: 'block', marginBottom: '0.75rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                          <div>
+                            <strong>{a.title}</strong> · <span className="mono">{a.category} · {a.weight_pct}% (max {a.max_score})</span>
+                          </div>
+                          <div style={{ display: 'flex', gap: '0.4rem' }}>
+                            <button type="button" className="primary" onClick={() => handleSaveAssessmentScores(a.id)}>Save Scores</button>
+                            <button type="button" className="danger" onClick={() => handleDeleteAssessment(a.id)}>Delete</button>
+                          </div>
+                        </div>
+                        <div style={{ display: 'grid', gap: '0.35rem' }}>
+                          {(gradebook?.students || []).map((st) => (
+                            <div key={st.student_id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                              <span><span className="mono">{st.student_number}</span> {st.first_name} {st.last_name} {st.weightedPct !== null ? <small className="muted">({st.weightedPct}% · {st.projectedLetter})</small> : null}</span>
+                              <input
+                                type="number"
+                                min="0"
+                                max={a.max_score}
+                                step="0.5"
+                                aria-label={`${a.title} score for ${st.first_name}`}
+                                style={{ inlineSize: '6.5rem' }}
+                                value={scoreDrafts[st.student_id]?.[a.id] ?? ''}
+                                onChange={(e) => setScoreDrafts((prev) => ({
+                                  ...prev,
+                                  [st.student_id]: { ...(prev[st.student_id] || {}), [a.id]: e.target.value }
+                                }))}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : subTab === 'announcements' ? (
+                  <div className="grid-2">
+                    <div>
+                      <h3>Syllabus Summary</h3>
+                      <form onSubmit={handleSaveSyllabus}>
+                        <div className="field">
+                          <label htmlFor="off-syllabus">Course Overview &amp; Objectives</label>
+                          <textarea id="off-syllabus" rows={3} required minLength={5} value={syllabusDraft} onChange={(e) => setSyllabusDraft(e.target.value)} />
+                        </div>
+                        <button type="submit">Update Syllabus</button>
+                      </form>
+
+                      <h3 style={{ marginTop: '1.1rem' }}>Post Class Announcement</h3>
+                      <form onSubmit={handlePostAnnouncement}>
+                        <div className="field">
+                          <label htmlFor="ann-title">Title</label>
+                          <input id="ann-title" required value={annForm.title} onChange={(e) => setAnnForm((f) => ({ ...f, title: e.target.value }))} />
+                        </div>
+                        <div className="field">
+                          <label htmlFor="ann-body">Message (notifies all enrolled students)</label>
+                          <textarea id="ann-body" rows={3} required value={annForm.body} onChange={(e) => setAnnForm((f) => ({ ...f, body: e.target.value }))} />
+                        </div>
+                        <button type="submit" className="primary">Broadcast Announcement</button>
+                      </form>
+                    </div>
+
+                    <div>
+                      <h3>Anonymous Student Evaluations</h3>
+                      {evalSummary?.summary ? (
+                        <div className="panel" style={{ marginBottom: '0.85rem' }}>
+                          <div className="mono" style={{ fontSize: '0.85rem' }}>
+                            Responses: {evalSummary.summary.response_count} • Teaching: {evalSummary.summary.avg_teaching ?? '—'}/5 • Content: {evalSummary.summary.avg_content ?? '—'}/5 • Fairness: {evalSummary.summary.avg_fairness ?? '—'}/5
+                          </div>
+                          {(evalSummary.comments || []).map((c) => (
+                            <p key={c.id} className="muted" style={{ fontSize: '0.84rem', margin: '0.35rem 0 0' }}>
+                              &ldquo;{c.comment}&rdquo;
+                            </p>
+                          ))}
+                        </div>
+                      ) : null}
+
+                      <h3>Recent Announcements</h3>
+                      <ul className="compact-list">
+                        {announcements.map((a) => (
+                          <li key={a.id} className="compact-list-item" style={{ display: 'block' }}>
+                            <strong>{a.title}</strong>
+                            <p style={{ margin: '0.2rem 0 0', fontSize: '0.84rem' }}>{a.body}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 ) : subTab === 'roster' ? (
                   <>
                     {distInfo.distribution.length > 0 ? (

@@ -131,18 +131,28 @@ export async function listStudentEnrollments(studentId, termId) {
 export async function getDegreeAudit(studentId, departmentId) {
   const res = await query(
     `SELECT c.id, c.code, c.title, c.credits,
-            EXISTS (
-              SELECT 1 FROM enrollments e
-              JOIN course_offerings o ON o.id = e.offering_id
-              WHERE e.student_id = $1 AND o.course_id = c.id
-                AND e.status = 'completed' AND e.grade_points >= 1.0
+            (
+              EXISTS (
+                SELECT 1 FROM enrollments e
+                JOIN course_offerings o ON o.id = e.offering_id
+                WHERE e.student_id = $1 AND o.course_id = c.id
+                  AND e.status = 'completed' AND (e.grade_points >= 1.0 OR e.grade_letter = 'P')
+              )
+              OR EXISTS (
+                SELECT 1 FROM transfer_credits tc
+                WHERE tc.student_id = $1 AND tc.equivalent_course_id = c.id
+              )
             ) AS is_completed,
             EXISTS (
               SELECT 1 FROM enrollments e
               JOIN course_offerings o ON o.id = e.offering_id
               WHERE e.student_id = $1 AND o.course_id = c.id
                 AND e.status = 'enrolled'
-            ) AS is_in_progress
+            ) AS is_in_progress,
+            EXISTS (
+              SELECT 1 FROM transfer_credits tc
+              WHERE tc.student_id = $1 AND tc.equivalent_course_id = c.id
+            ) AS is_transfer_credit
      FROM courses c
      WHERE c.department_id = $2
      ORDER BY c.code ASC`,

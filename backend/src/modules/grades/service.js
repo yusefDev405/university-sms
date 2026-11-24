@@ -1,5 +1,5 @@
 import { AppError } from '../../utils/errors.js';
-import { gradeLetterToPoints } from '../../utils/grades.js';
+import { gradeLetterToPoints, isNonGpaGrade, VALID_GRADE_LETTERS } from '../../utils/grades.js';
 import * as repo from './repository.js';
 
 export async function setSingleGrade(enrollmentId, gradeLetter, actor) {
@@ -16,10 +16,10 @@ export async function setSingleGrade(enrollmentId, gradeLetter, actor) {
     throw new AppError(409, 'INVALID_ENROLLMENT_STATUS', 'Only enrolled or completed records can be graded');
   }
 
-  const gradePoints = gradeLetterToPoints(gradeLetter);
-  if (gradePoints === null) {
+  if (!VALID_GRADE_LETTERS.includes(gradeLetter)) {
     throw new AppError(400, 'INVALID_GRADE', 'Unsupported grade letter');
   }
+  const gradePoints = isNonGpaGrade(gradeLetter) ? null : gradeLetterToPoints(gradeLetter);
 
   return repo.setSingleGrade(enrollmentId, gradeLetter, gradePoints, actor.id);
 }
@@ -35,10 +35,10 @@ export async function setBulkGrades(offeringId, grades, actor) {
   }
 
   const prepared = grades.map((g) => {
-    const gradePoints = gradeLetterToPoints(g.gradeLetter);
-    if (gradePoints === null) {
+    if (!VALID_GRADE_LETTERS.includes(g.gradeLetter)) {
       throw new AppError(400, 'INVALID_GRADE', `Unsupported grade letter: ${g.gradeLetter}`);
     }
+    const gradePoints = isNonGpaGrade(g.gradeLetter) ? null : gradeLetterToPoints(g.gradeLetter);
     return { ...g, gradePoints };
   });
 

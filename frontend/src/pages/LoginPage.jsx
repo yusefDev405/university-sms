@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { apiRequest, setAccessToken } from '../api/client.js';
+import { VerifyCredentialModal } from '../components/VerifyCredentialModal.jsx';
 import { attachAccessibleFormValidation } from '../utils/a11y.js';
 
 const DEMO_ACCOUNTS = [
   { label: 'Student (Nadia Mansour)', email: 'nadia.mansour@galala.edu.eg', pass: 'Student123!' },
-  { label: 'Instructor (Prof. Amina Darwish)', email: 'amina.darwish@galala.edu.eg', pass: 'Instructor123!' },
+  { label: 'Chair & Instructor (Prof. Amina Darwish)', email: 'amina.darwish@galala.edu.eg', pass: 'Instructor123!' },
   { label: 'Admin (Registrar)', email: 'admin@galala.edu.eg', pass: 'AdminPass123!' }
 ];
 
@@ -12,7 +13,10 @@ export function LoginPage({ onSuccess }) {
   const formRef = useRef(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [totpCode, setTotpCode] = useState('');
+  const [needsTotp, setNeedsTotp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showVerify, setShowVerify] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
 
@@ -30,14 +34,21 @@ export function LoginPage({ onSuccess }) {
 
     setSubmitting(true);
     try {
+      const payload = { email, password };
+      if (totpCode.trim()) payload.totpCode = totpCode.trim();
       const res = await apiRequest('/auth/login', {
         method: 'POST',
-        body: { email, password }
+        body: payload
       });
       setAccessToken(res.data.accessToken);
       onSuccess(res.data.user);
     } catch (err) {
-      setServerError(err.message || 'Sign in failed');
+      if (err.code === 'TOTP_REQUIRED') {
+        setNeedsTotp(true);
+        setServerError('Two-factor authentication is enabled on this account. Enter your 6-digit authenticator code.');
+      } else {
+        setServerError(err.message || 'Sign in failed');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -49,7 +60,7 @@ export function LoginPage({ onSuccess }) {
         <div className="page-kicker">Galala University ICT</div>
         <h1 id="login-heading">Academic Registry Sign In</h1>
         <p className="muted">
-          Access course registration, official academic transcripts, and grading rosters.
+          Access course registration, gradebook, official transcripts, finance ledger, and degree verification.
         </p>
 
         {serverError ? (
@@ -95,7 +106,7 @@ export function LoginPage({ onSuccess }) {
                 required
                 minLength={8}
                 autoComplete="current-password"
-                enterKeyHint="done"
+                enterKeyHint={needsTotp ? 'next' : 'done'}
                 data-error="password-error"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -113,10 +124,32 @@ export function LoginPage({ onSuccess }) {
             </div>
           </div>
 
+          {needsTotp ? (
+            <div className="field">
+              <label htmlFor="login-totp">Authenticator Code (6 digits)</label>
+              <input
+                id="login-totp"
+                type="text"
+                inputMode="numeric"
+                pattern="\d{6}"
+                required
+                placeholder="000000"
+                value={totpCode}
+                onChange={(e) => setTotpCode(e.target.value)}
+              />
+            </div>
+          ) : null}
+
           <button type="submit" className="primary" style={{ inlineSize: '100%' }} disabled={submitting}>
             {submitting ? 'Signing in…' : 'Sign In'}
           </button>
         </form>
+
+        <div style={{ marginTop: '0.85rem' }}>
+          <button type="button" style={{ inlineSize: '100%' }} onClick={() => setShowVerify(true)}>
+            Verify Official Credential
+          </button>
+        </div>
 
         <details className="demo-drawer">
           <summary>Demo accounts for evaluation</summary>
@@ -128,6 +161,8 @@ export function LoginPage({ onSuccess }) {
                 onClick={() => {
                   setEmail(acc.email);
                   setPassword(acc.pass);
+                  setNeedsTotp(false);
+                  setTotpCode('');
                   setServerError('');
                 }}
               >
@@ -137,6 +172,8 @@ export function LoginPage({ onSuccess }) {
           </div>
         </details>
       </section>
+
+      <VerifyCredentialModal open={showVerify} onClose={() => setShowVerify(false)} />
     </main>
   );
 }

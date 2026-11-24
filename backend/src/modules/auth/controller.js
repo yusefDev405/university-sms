@@ -24,7 +24,11 @@ function clearRefreshCookie(res) {
 
 export async function login(req, res, next) {
   try {
-    const result = await service.login(req.body);
+    const result = await service.login({
+      ...req.body,
+      userAgent: req.get('user-agent') || 'Unknown device',
+      ipAddress: req.ip || null
+    });
     setRefreshCookie(res, result.refreshToken);
     res.json({
       data: {
@@ -40,7 +44,10 @@ export async function login(req, res, next) {
 export async function refresh(req, res, next) {
   try {
     const rawToken = req.cookies?.[REFRESH_COOKIE_NAME];
-    const result = await service.refresh(rawToken);
+    const result = await service.refresh(rawToken, {
+      userAgent: req.get('user-agent') || 'Unknown device',
+      ipAddress: req.ip || null
+    });
     setRefreshCookie(res, result.refreshToken);
     res.json({
       data: {
@@ -79,6 +86,53 @@ export async function changePassword(req, res, next) {
     await service.changePassword(req.user.id, req.body);
     clearRefreshCookie(res);
     res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function listSessions(req, res, next) {
+  try {
+    const rawToken = req.cookies?.[REFRESH_COOKIE_NAME];
+    const sessions = await service.listActiveSessions(req.user.id, rawToken);
+    res.json({ data: sessions });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function revokeOtherSessions(req, res, next) {
+  try {
+    const rawToken = req.cookies?.[REFRESH_COOKIE_NAME];
+    const result = await service.revokeOtherSessions(req.user.id, rawToken);
+    res.json({ data: result });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function setupTotp(req, res, next) {
+  try {
+    const result = await service.setupTotp(req.user.id);
+    res.json({ data: result });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function enableTotp(req, res, next) {
+  try {
+    const result = await service.enableTotp(req.user.id, req.body.code);
+    res.json({ data: result });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function disableTotp(req, res, next) {
+  try {
+    const result = await service.disableTotp(req.user.id, req.body.password);
+    res.json({ data: result });
   } catch (err) {
     next(err);
   }

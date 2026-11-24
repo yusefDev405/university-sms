@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
+import { t } from '../i18n.js';
 
 export function Navbar({
   user,
   navItems,
   activePage,
   onNavigate,
-  onOpenPassword,
+  onOpenSecurity,
   onLogout,
   theme,
   onToggleTheme,
+  lang = 'en',
+  onToggleLang,
   notifications = [],
   onMarkNotificationRead
 }) {
@@ -44,7 +47,7 @@ export function Navbar({
           try {
             menu.showPopover();
           } catch {
-            // ignore if already open
+            // ignore
           }
         }
       }
@@ -65,9 +68,8 @@ export function Navbar({
     ro.observe(menu);
 
     return () => ro.disconnect();
-  }, [navItems.length]);
+  }, [navItems.length, lang]);
 
-  // Fallback for browsers lacking @container scroll-state
   useEffect(() => {
     if (typeof CSS !== 'undefined' && CSS.supports?.('container-type', 'scroll-state')) {
       return undefined;
@@ -106,8 +108,8 @@ export function Navbar({
         >
           <span className="brand-crest" aria-hidden="true">G</span>
           <span className="brand-text">
-            <span className="brand-title">Galala Academic Registry</span>
-            <span className="brand-sub">Student Management System</span>
+            <span className="brand-title">{t(lang, 'brandTitle')}</span>
+            <span className="brand-sub">{t(lang, 'brandSub')}</span>
           </span>
         </a>
 
@@ -120,7 +122,7 @@ export function Navbar({
             aria-controls="site-menu"
           >
             <span aria-hidden="true">☰</span>
-            <span>Menu</span>
+            <span>{t(lang, 'menu')}</span>
           </button>
 
           <ul ref={menuRef} id="site-menu" className="site-menu">
@@ -141,7 +143,7 @@ export function Navbar({
 
         <div className="header-actions">
           <span className="role-pill" title={user.email}>
-            {user.role}
+            {user.role === 'instructor' && user.profile?.is_chair ? 'chair' : user.role}
           </span>
           <button
             type="button"
@@ -150,7 +152,7 @@ export function Navbar({
             popoverTargetAction="toggle"
             aria-label={`Notifications (${notifications.filter((n) => !n.read_at).length} unread)`}
           >
-            Inbox ({notifications.filter((n) => !n.read_at).length})
+            {t(lang, 'inbox')} ({notifications.filter((n) => !n.read_at).length})
           </button>
           <div id="notif-popover" popover="auto" className="notif-popover" aria-label="Notification inbox">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBlockEnd: '0.5rem' }}>
@@ -184,13 +186,19 @@ export function Navbar({
               ))
             )}
           </div>
-          <button
-            type="button"
-            className="ghost"
-            onClick={onOpenPassword}
-          >
-            Password
+          <button type="button" className="ghost" onClick={onOpenSecurity}>
+            {t(lang, 'security')}
           </button>
+          {onToggleLang ? (
+            <button
+              type="button"
+              className="ghost"
+              onClick={onToggleLang}
+              aria-label="Toggle language and layout direction"
+            >
+              {lang === 'ar' ? 'EN' : 'العربية'}
+            </button>
+          ) : null}
           <button
             type="button"
             className="ghost"
@@ -201,7 +209,7 @@ export function Navbar({
             {theme === 'dark' ? 'Light' : theme === 'light' ? 'Auto' : 'Dark'}
           </button>
           <button type="button" onClick={onLogout}>
-            Sign out
+            {t(lang, 'signOut')}
           </button>
         </div>
       </div>

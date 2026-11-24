@@ -407,3 +407,263 @@ paths:
       summary: Bulk import students from CSV with row-level validation (Admin)
       responses:
         '201': { description: Import summary with accepted count and rejected rows }
+  /me/coursework:
+    get:
+      summary: Student weighted gradebook scores, syllabus, and announcements
+      responses:
+        '200': { description: Enriched coursework per enrolled offering }
+  /offerings/{id}/gradebook:
+    get:
+      summary: Offering gradebook matrix (Instructor owner, Admin, or enrolled Student)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Assessments, scores, and projected letter grades }
+  /offerings/{id}/assessments:
+    post:
+      summary: Create weighted gradebook assessment (<=100% total weight)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '201': { description: Assessment created }
+  /assessments/{assessmentId}/scores:
+    put:
+      summary: Batch upsert student scores for an assessment
+      parameters:
+        - in: path
+          name: assessmentId
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Scores saved }
+  /offerings/{id}/grades/compute-from-gradebook:
+    post:
+      summary: Compute weighted percentages and post final letter grades transactionally
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Final grades computed and applied }
+  /offerings/{id}/announcements:
+    get:
+      summary: List course announcements
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Announcement list }
+    post:
+      summary: Publish announcement and notify enrolled students
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '201': { description: Announcement posted }
+  /grade-appeals:
+    get:
+      summary: List grade appeals (Student own, Dept Chair department, or Admin all)
+      responses:
+        '200': { description: Grade appeals list }
+    post:
+      summary: Submit a formal grade appeal (Student)
+      responses:
+        '201': { description: Grade appeal submitted }
+  /grade-appeals/{id}/decide:
+    patch:
+      summary: Approve or reject grade appeal and optionally revise grade atomically (Chair / Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Appeal decision recorded }
+  /override-petitions:
+    get:
+      summary: List registration override petitions
+      responses:
+        '200': { description: Override petitions list }
+    post:
+      summary: Request prerequisite, credit overload, or capacity override (Student)
+      responses:
+        '201': { description: Petition submitted }
+  /override-petitions/{id}/decide:
+    patch:
+      summary: Approve or reject override petition honored by enroll_student() (Chair / Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Petition decided }
+  /advising/advisees:
+    get:
+      summary: List assigned academic advisees with standing and open alerts (Instructor / Admin)
+      responses:
+        '200': { description: Advisee roster }
+  /early-alerts:
+    get:
+      summary: List faculty early alerts & commendations
+      responses:
+        '200': { description: Alerts list }
+    post:
+      summary: Issue an early alert or commendation (notifies student & advisor)
+      responses:
+        '201': { description: Alert created }
+  /me/degree-plan:
+    get:
+      summary: Get student's multi-term degree plan
+      responses:
+        '200': { description: Planned courses by term }
+    post:
+      summary: Add or move a course on the multi-term degree plan
+      responses:
+        '201': { description: Plan item saved }
+  /admissions:
+    get:
+      summary: List admissions applications (Admin)
+      responses:
+        '200': { description: Applications list }
+    post:
+      summary: Create admissions application (Admin)
+      responses:
+        '201': { description: Application recorded }
+  /admissions/{id}/matriculate:
+    post:
+      summary: Transactionally matriculate an admitted applicant into user + student accounts
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '201': { description: Matriculated student profile created }
+  /transfer-credits:
+    get:
+      summary: List transfer credit equivalencies (Admin)
+      responses:
+        '200': { description: Transfer credit list }
+    post:
+      summary: Record approved transfer credit (satisfies prerequisites & degree audit)
+      responses:
+        '201': { description: Transfer credit created }
+  /graduation-applications:
+    get:
+      summary: List graduation clearance applications (Admin)
+      responses:
+        '200': { description: Graduation applications }
+  /verify/{code}:
+    get:
+      summary: Public unauthenticated official degree & credential verification
+      security: []
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Conferred/approved degree verification record }
+        '404': { description: Credential code not found }
+  /rooms:
+    get:
+      summary: List campus rooms inventory
+      responses:
+        '200': { description: Rooms list }
+    post:
+      summary: Add campus room (Admin)
+      responses:
+        '201': { description: Room added }
+  /exams:
+    get:
+      summary: List scheduled final exams
+      responses:
+        '200': { description: Exam schedules }
+    post:
+      summary: Schedule final exam with room & student overlap detection (Admin)
+      responses:
+        '201': { description: Exam scheduled }
+        '409': { description: Room or student exam conflict }
+  /office-hours:
+    get:
+      summary: List faculty office hour slots & own bookings
+      responses:
+        '200': { description: Slots and bookings }
+  /evaluations:
+    post:
+      summary: Submit strictly anonymous course evaluation
+      responses:
+        '201': { description: Anonymous evaluation saved }
+        '409': { description: Already evaluated }
+  /calendar:
+    get:
+      summary: List academic calendar milestones
+      responses:
+        '200': { description: Calendar events }
+  /admin/analytics/executive:
+    get:
+      summary: Executive DFW rates, room utilization, faculty workload, and prereq bottlenecks (Admin)
+      responses:
+        '200': { description: Analytics report }
+  /me/finance:
+    get:
+      summary: Student tuition, scholarship waivers, payments, and net balance
+      responses:
+        '200': { description: Student ledger & balance summary }
+  /finance/ledger:
+    get:
+      summary: Bursar view of all ledger entries and student balances (Admin)
+      responses:
+        '200': { description: Full ledger & balances }
+  /finance/assess-term:
+    post:
+      summary: Assess term tuition and automatic 25% Dean's List waivers (Admin)
+      responses:
+        '201': { description: Term billing run complete }
+  /finance/entries:
+    post:
+      summary: Post manual charge, waiver, or payment (auto-lifts financial hold when balance <= 0)
+      responses:
+        '201': { description: Ledger entry posted }
+  /finance/enforce-holds:
+    post:
+      summary: Place financial registration holds on overdue accounts (Admin)
+      responses:
+        '200': { description: Holds enforced }
+  /me/sessions:
+    get:
+      summary: List active refresh-token device sessions for current user
+      responses:
+        '200': { description: Active sessions list }
+  /me/sessions/revoke-others:
+    post:
+      summary: Revoke all other active sessions except current device
+      responses:
+        '200': { description: Other sessions revoked }
+  /me/2fa/setup:
+    post:
+      summary: Generate RFC 6238 TOTP secret & otpauth URI
+      responses:
+        '200': { description: TOTP setup payload }
+  /me/2fa/enable:
+    post:
+      summary: Verify 6-digit TOTP code and enable 2FA
+      responses:
+        '200': { description: 2FA enabled }
+  /me/2fa/disable:
+    post:
+      summary: Disable 2FA after confirming password
+      responses:
+        '200': { description: 2FA disabled }

@@ -1,169 +1,257 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1435" height="790" viewBox="0 0 1435 790">
+<svg xmlns="http://www.w3.org/2000/svg" width="1690" height="1160" viewBox="0 0 1690 1160">
 <rect width="100%" height="100%" fill="#F7F5F0"/>
-<text x="40" y="30" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#181A1F">University Student Management System — Normalized 3NF ER Diagram (16 Tables)</text>
-<line x1="235" y1="90" x2="320" y2="90" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="277.5" y="86.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:1</text>
-<line x1="235" y1="130" x2="320" y2="280" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="277.5" y="201.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:1</text>
-<line x1="135" y1="204" x2="135" y2="235" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="135.0" y="215.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="135" y1="204" x2="40" y2="455" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="87.5" y="325.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="135" y1="204" x2="40" y2="645" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="87.5" y="420.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="515" y1="90" x2="620" y2="90" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="567.5" y="86.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="415" y1="204" x2="415" y2="615" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="415.0" y="405.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="715" y1="235" x2="715" y2="204" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="715.0" y="215.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="515" y1="290" x2="620" y2="290" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="567.5" y="286.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="415" y1="425" x2="415" y2="369" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="415.0" y="393.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="515" y1="480" x2="620" y2="480" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="567.5" y="476.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="715" y1="425" x2="715" y2="389" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="715.0" y="403.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="815" y1="290" x2="910" y2="290" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="862.5" y="286.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="910" y1="100" x2="815" y2="260" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="862.5" y="176.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="815" y1="480" x2="910" y2="465" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="862.5" y="468.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">M:N</text>
-<line x1="815" y1="240" x2="1200" y2="195" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="1007.5" y="213.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<line x1="1297" y1="274" x2="1297" y2="340" stroke="#7D1D2B" stroke-width="1.6"/>
-<text x="1297.0" y="303.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
-<rect x="40" y="50" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="40" y="50" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="50" y="67" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">users</text>
-<text x="50" y="94" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="50" y="114" font-family="sans-serif" font-size="11" fill="#181A1F">email UNIQUE</text>
-<text x="50" y="134" font-family="sans-serif" font-size="11" fill="#181A1F">password_hash</text>
-<text x="50" y="154" font-family="sans-serif" font-size="11" fill="#181A1F">role</text>
-<text x="50" y="174" font-family="sans-serif" font-size="11" fill="#181A1F">failed_login_attempts</text>
-<text x="50" y="194" font-family="sans-serif" font-size="11" fill="#181A1F">locked_until</text>
-<rect x="40" y="235" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="40" y="235" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="50" y="252" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">refresh_tokens</text>
-<text x="50" y="279" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="50" y="299" font-family="sans-serif" font-size="11" fill="#181A1F">user_id FK</text>
-<text x="50" y="319" font-family="sans-serif" font-size="11" fill="#181A1F">family_id</text>
-<text x="50" y="339" font-family="sans-serif" font-size="11" fill="#181A1F">token_hash UNIQUE</text>
-<text x="50" y="359" font-family="sans-serif" font-size="11" fill="#181A1F">expires_at</text>
-<text x="50" y="379" font-family="sans-serif" font-size="11" fill="#181A1F">revoked_at</text>
-<rect x="40" y="425" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="40" y="425" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="50" y="442" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">audit_log</text>
-<text x="50" y="469" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="50" y="489" font-family="sans-serif" font-size="11" fill="#181A1F">actor_user_id FK</text>
-<text x="50" y="509" font-family="sans-serif" font-size="11" fill="#181A1F">action</text>
-<text x="50" y="529" font-family="sans-serif" font-size="11" fill="#181A1F">entity / entity_id</text>
-<text x="50" y="549" font-family="sans-serif" font-size="11" fill="#181A1F">old_data JSONB</text>
-<text x="50" y="569" font-family="sans-serif" font-size="11" fill="#181A1F">new_data JSONB</text>
-<rect x="40" y="615" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="40" y="615" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="50" y="632" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">notifications</text>
-<text x="50" y="659" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="50" y="679" font-family="sans-serif" font-size="11" fill="#181A1F">user_id FK</text>
-<text x="50" y="699" font-family="sans-serif" font-size="11" fill="#181A1F">title</text>
-<text x="50" y="719" font-family="sans-serif" font-size="11" fill="#181A1F">message</text>
-<text x="50" y="739" font-family="sans-serif" font-size="11" fill="#181A1F">read_at</text>
-<text x="50" y="759" font-family="sans-serif" font-size="11" fill="#181A1F">created_at</text>
-<rect x="320" y="50" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="320" y="50" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="330" y="67" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">students</text>
-<text x="330" y="94" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="330" y="114" font-family="sans-serif" font-size="11" fill="#181A1F">user_id FK UNIQUE</text>
-<text x="330" y="134" font-family="sans-serif" font-size="11" fill="#181A1F">student_number UNIQUE</text>
-<text x="330" y="154" font-family="sans-serif" font-size="11" fill="#181A1F">first_name / last_name</text>
-<text x="330" y="174" font-family="sans-serif" font-size="11" fill="#181A1F">department_id FK</text>
-<text x="330" y="194" font-family="sans-serif" font-size="11" fill="#181A1F">status</text>
-<rect x="320" y="235" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="320" y="235" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="330" y="252" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">instructors</text>
-<text x="330" y="279" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="330" y="299" font-family="sans-serif" font-size="11" fill="#181A1F">user_id FK UNIQUE</text>
-<text x="330" y="319" font-family="sans-serif" font-size="11" fill="#181A1F">department_id FK</text>
-<text x="330" y="339" font-family="sans-serif" font-size="11" fill="#181A1F">first_name / last_name</text>
-<text x="330" y="359" font-family="sans-serif" font-size="11" fill="#181A1F">title</text>
-<rect x="320" y="425" width="195" height="114" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="320" y="425" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="330" y="442" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">departments</text>
-<text x="330" y="469" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="330" y="489" font-family="sans-serif" font-size="11" fill="#181A1F">code UNIQUE</text>
-<text x="330" y="509" font-family="sans-serif" font-size="11" fill="#181A1F">name</text>
-<text x="330" y="529" font-family="sans-serif" font-size="11" fill="#181A1F">created_at</text>
-<rect x="320" y="615" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="320" y="615" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="330" y="632" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">academic_holds</text>
-<text x="330" y="659" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="330" y="679" font-family="sans-serif" font-size="11" fill="#181A1F">student_id FK</text>
-<text x="330" y="699" font-family="sans-serif" font-size="11" fill="#181A1F">reason</text>
-<text x="330" y="719" font-family="sans-serif" font-size="11" fill="#181A1F">placed_by FK</text>
-<text x="330" y="739" font-family="sans-serif" font-size="11" fill="#181A1F">resolved_at / resolved_by</text>
-<rect x="620" y="50" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="620" y="50" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="630" y="67" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">enrollments</text>
-<text x="630" y="94" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="630" y="114" font-family="sans-serif" font-size="11" fill="#181A1F">student_id FK</text>
-<text x="630" y="134" font-family="sans-serif" font-size="11" fill="#181A1F">offering_id FK</text>
-<text x="630" y="154" font-family="sans-serif" font-size="11" fill="#181A1F">status</text>
-<text x="630" y="174" font-family="sans-serif" font-size="11" fill="#181A1F">grade_points</text>
-<text x="630" y="194" font-family="sans-serif" font-size="11" fill="#181A1F">grade_letter</text>
-<rect x="620" y="235" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="620" y="235" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="630" y="252" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">course_offerings</text>
-<text x="630" y="279" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="630" y="299" font-family="sans-serif" font-size="11" fill="#181A1F">course_id FK</text>
-<text x="630" y="319" font-family="sans-serif" font-size="11" fill="#181A1F">term_id FK</text>
-<text x="630" y="339" font-family="sans-serif" font-size="11" fill="#181A1F">instructor_id FK</text>
-<text x="630" y="359" font-family="sans-serif" font-size="11" fill="#181A1F">section / capacity</text>
-<text x="630" y="379" font-family="sans-serif" font-size="11" fill="#181A1F">room</text>
-<rect x="620" y="425" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="620" y="425" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="630" y="442" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">courses</text>
-<text x="630" y="469" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="630" y="489" font-family="sans-serif" font-size="11" fill="#181A1F">code UNIQUE</text>
-<text x="630" y="509" font-family="sans-serif" font-size="11" fill="#181A1F">title</text>
-<text x="630" y="529" font-family="sans-serif" font-size="11" fill="#181A1F">credits CHECK 1..6</text>
-<text x="630" y="549" font-family="sans-serif" font-size="11" fill="#181A1F">department_id FK</text>
-<rect x="910" y="50" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="910" y="50" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="920" y="67" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">terms</text>
-<text x="920" y="94" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="920" y="114" font-family="sans-serif" font-size="11" fill="#181A1F">name UNIQUE</text>
-<text x="920" y="134" font-family="sans-serif" font-size="11" fill="#181A1F">start_date / end_date</text>
-<text x="920" y="154" font-family="sans-serif" font-size="11" fill="#181A1F">registration_opens/closes</text>
-<text x="920" y="174" font-family="sans-serif" font-size="11" fill="#181A1F">withdrawal_closes</text>
-<rect x="910" y="235" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="910" y="235" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="920" y="252" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">offering_meetings</text>
-<text x="920" y="279" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="920" y="299" font-family="sans-serif" font-size="11" fill="#181A1F">offering_id FK</text>
-<text x="920" y="319" font-family="sans-serif" font-size="11" fill="#181A1F">day_of_week</text>
-<text x="920" y="339" font-family="sans-serif" font-size="11" fill="#181A1F">start_time</text>
-<text x="920" y="359" font-family="sans-serif" font-size="11" fill="#181A1F">end_time</text>
-<rect x="910" y="425" width="195" height="74" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="910" y="425" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="920" y="442" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">course_prerequisites</text>
-<text x="920" y="469" font-family="sans-serif" font-size="11" fill="#181A1F">course_id PK/FK</text>
-<text x="920" y="489" font-family="sans-serif" font-size="11" fill="#181A1F">prerequisite_id PK/FK</text>
-<rect x="1200" y="140" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="1200" y="140" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="1210" y="157" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">attendance_sessions</text>
-<text x="1210" y="184" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="1210" y="204" font-family="sans-serif" font-size="11" fill="#181A1F">offering_id FK</text>
-<text x="1210" y="224" font-family="sans-serif" font-size="11" fill="#181A1F">session_date</text>
-<text x="1210" y="244" font-family="sans-serif" font-size="11" fill="#181A1F">topic</text>
-<text x="1210" y="264" font-family="sans-serif" font-size="11" fill="#181A1F">created_by FK</text>
-<rect x="1200" y="340" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
-<rect x="1200" y="340" width="195" height="26" rx="4" fill="#7D1D2B"/>
-<text x="1210" y="357" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">attendance_records</text>
-<text x="1210" y="384" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
-<text x="1210" y="404" font-family="sans-serif" font-size="11" fill="#181A1F">session_id FK</text>
-<text x="1210" y="424" font-family="sans-serif" font-size="11" fill="#181A1F">student_id FK</text>
-<text x="1210" y="444" font-family="sans-serif" font-size="11" fill="#181A1F">status</text>
-<text x="1210" y="464" font-family="sans-serif" font-size="11" fill="#181A1F">note</text>
+<text x="30" y="30" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#181A1F">University Student Management System — Enterprise 3NF Schema (36 Normalized Tables)</text>
+<text x="30" y="64" font-family="Georgia, serif" font-size="14" font-weight="bold" fill="#7D1D2B">1. Identity, Auth & Governance</text>
+<text x="350" y="64" font-family="Georgia, serif" font-size="14" font-weight="bold" fill="#7D1D2B">2. Academic Core, Curriculum & Registration</text>
+<text x="690" y="64" font-family="Georgia, serif" font-size="14" font-weight="bold" fill="#7D1D2B">3. Gradebook LMS Bridge & Attendance</text>
+<text x="1030" y="64" font-family="Georgia, serif" font-size="14" font-weight="bold" fill="#7D1D2B">4. Advising, Admissions, Appeals & Graduation</text>
+<text x="1370" y="64" font-family="Georgia, serif" font-size="14" font-weight="bold" fill="#7D1D2B">5. Campus Operations & Finance ERP</text>
+<rect x="30" y="76" width="290" height="110" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="30" y="76" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="38" y="91" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">users</text>
+<text x="38" y="113" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="38" y="129" font-family="sans-serif" font-size="10.5" fill="#181A1F">email UNIQUE</text>
+<text x="38" y="145" font-family="sans-serif" font-size="10.5" fill="#181A1F">password_hash</text>
+<text x="38" y="161" font-family="sans-serif" font-size="10.5" fill="#181A1F">role / is_active</text>
+<text x="38" y="177" font-family="sans-serif" font-size="10.5" fill="#181A1F">totp_secret / totp_enabled</text>
+<rect x="30" y="198" width="290" height="110" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="30" y="198" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="38" y="213" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">refresh_tokens</text>
+<text x="38" y="235" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="38" y="251" font-family="sans-serif" font-size="10.5" fill="#181A1F">user_id FK</text>
+<text x="38" y="267" font-family="sans-serif" font-size="10.5" fill="#181A1F">family_id</text>
+<text x="38" y="283" font-family="sans-serif" font-size="10.5" fill="#181A1F">token_hash UNIQUE</text>
+<text x="38" y="299" font-family="sans-serif" font-size="10.5" fill="#181A1F">user_agent / ip_address</text>
+<rect x="30" y="320" width="290" height="110" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="30" y="320" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="38" y="335" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">notifications</text>
+<text x="38" y="357" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="38" y="373" font-family="sans-serif" font-size="10.5" fill="#181A1F">user_id FK</text>
+<text x="38" y="389" font-family="sans-serif" font-size="10.5" fill="#181A1F">title / message</text>
+<text x="38" y="405" font-family="sans-serif" font-size="10.5" fill="#181A1F">read_at</text>
+<text x="38" y="421" font-family="sans-serif" font-size="10.5" fill="#181A1F">created_at</text>
+<rect x="30" y="442" width="290" height="110" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="30" y="442" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="38" y="457" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">audit_log</text>
+<text x="38" y="479" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="38" y="495" font-family="sans-serif" font-size="10.5" fill="#181A1F">actor_user_id FK</text>
+<text x="38" y="511" font-family="sans-serif" font-size="10.5" fill="#181A1F">action / entity / entity_id</text>
+<text x="38" y="527" font-family="sans-serif" font-size="10.5" fill="#181A1F">old_data JSONB</text>
+<text x="38" y="543" font-family="sans-serif" font-size="10.5" fill="#181A1F">new_data JSONB</text>
+<rect x="350" y="76" width="290" height="78" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="350" y="76" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="358" y="91" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">departments</text>
+<text x="358" y="113" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="358" y="129" font-family="sans-serif" font-size="10.5" fill="#181A1F">code UNIQUE</text>
+<text x="358" y="145" font-family="sans-serif" font-size="10.5" fill="#181A1F">name</text>
+<rect x="350" y="166" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="350" y="166" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="358" y="181" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">instructors</text>
+<text x="358" y="203" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="358" y="219" font-family="sans-serif" font-size="10.5" fill="#181A1F">user_id FK</text>
+<text x="358" y="235" font-family="sans-serif" font-size="10.5" fill="#181A1F">department_id FK</text>
+<text x="358" y="251" font-family="sans-serif" font-size="10.5" fill="#181A1F">is_chair / max_credit_load</text>
+<rect x="350" y="272" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="350" y="272" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="358" y="287" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">students</text>
+<text x="358" y="309" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="358" y="325" font-family="sans-serif" font-size="10.5" fill="#181A1F">user_id FK</text>
+<text x="358" y="341" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_number UNIQUE</text>
+<text x="358" y="357" font-family="sans-serif" font-size="10.5" fill="#181A1F">department_id / advisor_id FK</text>
+<rect x="350" y="378" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="350" y="378" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="358" y="393" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">courses</text>
+<text x="358" y="415" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="358" y="431" font-family="sans-serif" font-size="10.5" fill="#181A1F">code UNIQUE</text>
+<text x="358" y="447" font-family="sans-serif" font-size="10.5" fill="#181A1F">title / credits</text>
+<text x="358" y="463" font-family="sans-serif" font-size="10.5" fill="#181A1F">department_id FK</text>
+<rect x="350" y="484" width="290" height="62" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="350" y="484" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="358" y="499" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">course_prerequisites</text>
+<text x="358" y="521" font-family="sans-serif" font-size="10.5" fill="#181A1F">course_id PK/FK</text>
+<text x="358" y="537" font-family="sans-serif" font-size="10.5" fill="#181A1F">prerequisite_id PK/FK</text>
+<rect x="350" y="558" width="290" height="62" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="350" y="558" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="358" y="573" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">course_corequisites</text>
+<text x="358" y="595" font-family="sans-serif" font-size="10.5" fill="#181A1F">course_id PK/FK</text>
+<text x="358" y="611" font-family="sans-serif" font-size="10.5" fill="#181A1F">corequisite_id PK/FK</text>
+<rect x="350" y="632" width="290" height="62" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="350" y="632" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="358" y="647" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">course_equivalencies</text>
+<text x="358" y="669" font-family="sans-serif" font-size="10.5" fill="#181A1F">course_id PK/FK</text>
+<text x="358" y="685" font-family="sans-serif" font-size="10.5" fill="#181A1F">equivalent_course_id PK/FK</text>
+<rect x="350" y="706" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="350" y="706" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="358" y="721" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">terms</text>
+<text x="358" y="743" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="358" y="759" font-family="sans-serif" font-size="10.5" fill="#181A1F">name UNIQUE</text>
+<text x="358" y="775" font-family="sans-serif" font-size="10.5" fill="#181A1F">start_date / end_date</text>
+<text x="358" y="791" font-family="sans-serif" font-size="10.5" fill="#181A1F">reg / withdrawal windows</text>
+<rect x="350" y="812" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="350" y="812" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="358" y="827" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">course_offerings</text>
+<text x="358" y="849" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="358" y="865" font-family="sans-serif" font-size="10.5" fill="#181A1F">course_id / term_id / instructor_id</text>
+<text x="358" y="881" font-family="sans-serif" font-size="10.5" fill="#181A1F">room_id FK</text>
+<text x="358" y="897" font-family="sans-serif" font-size="10.5" fill="#181A1F">section / capacity / syllabus</text>
+<rect x="350" y="918" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="350" y="918" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="358" y="933" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">offering_meetings</text>
+<text x="358" y="955" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="358" y="971" font-family="sans-serif" font-size="10.5" fill="#181A1F">offering_id FK</text>
+<text x="358" y="987" font-family="sans-serif" font-size="10.5" fill="#181A1F">day_of_week</text>
+<text x="358" y="1003" font-family="sans-serif" font-size="10.5" fill="#181A1F">start_time / end_time</text>
+<rect x="350" y="1024" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="350" y="1024" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="358" y="1039" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">enrollments</text>
+<text x="358" y="1061" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="358" y="1077" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_id / offering_id</text>
+<text x="358" y="1093" font-family="sans-serif" font-size="10.5" fill="#181A1F">status</text>
+<text x="358" y="1109" font-family="sans-serif" font-size="10.5" fill="#181A1F">grade_points / grade_letter</text>
+<rect x="690" y="76" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="690" y="76" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="698" y="91" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">assessments</text>
+<text x="698" y="113" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="698" y="129" font-family="sans-serif" font-size="10.5" fill="#181A1F">offering_id FK</text>
+<text x="698" y="145" font-family="sans-serif" font-size="10.5" fill="#181A1F">title / category</text>
+<text x="698" y="161" font-family="sans-serif" font-size="10.5" fill="#181A1F">weight_pct / max_score</text>
+<rect x="690" y="182" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="690" y="182" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="698" y="197" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">assessment_scores</text>
+<text x="698" y="219" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="698" y="235" font-family="sans-serif" font-size="10.5" fill="#181A1F">assessment_id FK</text>
+<text x="698" y="251" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_id FK</text>
+<text x="698" y="267" font-family="sans-serif" font-size="10.5" fill="#181A1F">score / feedback</text>
+<rect x="690" y="288" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="690" y="288" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="698" y="303" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">course_announcements</text>
+<text x="698" y="325" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="698" y="341" font-family="sans-serif" font-size="10.5" fill="#181A1F">offering_id FK</text>
+<text x="698" y="357" font-family="sans-serif" font-size="10.5" fill="#181A1F">author_user_id FK</text>
+<text x="698" y="373" font-family="sans-serif" font-size="10.5" fill="#181A1F">title / body</text>
+<rect x="690" y="394" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="690" y="394" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="698" y="409" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">attendance_sessions</text>
+<text x="698" y="431" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="698" y="447" font-family="sans-serif" font-size="10.5" fill="#181A1F">offering_id FK</text>
+<text x="698" y="463" font-family="sans-serif" font-size="10.5" fill="#181A1F">session_date / topic</text>
+<text x="698" y="479" font-family="sans-serif" font-size="10.5" fill="#181A1F">created_by FK</text>
+<rect x="690" y="500" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="690" y="500" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="698" y="515" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">attendance_records</text>
+<text x="698" y="537" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="698" y="553" font-family="sans-serif" font-size="10.5" fill="#181A1F">session_id FK</text>
+<text x="698" y="569" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_id FK</text>
+<text x="698" y="585" font-family="sans-serif" font-size="10.5" fill="#181A1F">status / note</text>
+<rect x="1030" y="76" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1030" y="76" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1038" y="91" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">academic_holds</text>
+<text x="1038" y="113" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1038" y="129" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_id FK</text>
+<text x="1038" y="145" font-family="sans-serif" font-size="10.5" fill="#181A1F">hold_type</text>
+<text x="1038" y="161" font-family="sans-serif" font-size="10.5" fill="#181A1F">reason / resolved_at</text>
+<rect x="1030" y="182" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1030" y="182" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1038" y="197" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">grade_appeals</text>
+<text x="1038" y="219" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1038" y="235" font-family="sans-serif" font-size="10.5" fill="#181A1F">enrollment_id / student_id</text>
+<text x="1038" y="251" font-family="sans-serif" font-size="10.5" fill="#181A1F">original / revised_grade</text>
+<text x="1038" y="267" font-family="sans-serif" font-size="10.5" fill="#181A1F">status / decision_note</text>
+<rect x="1030" y="288" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1030" y="288" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1038" y="303" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">override_petitions</text>
+<text x="1038" y="325" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1038" y="341" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_id / offering_id</text>
+<text x="1038" y="357" font-family="sans-serif" font-size="10.5" fill="#181A1F">petition_type</text>
+<text x="1038" y="373" font-family="sans-serif" font-size="10.5" fill="#181A1F">status / decision_note</text>
+<rect x="1030" y="394" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1030" y="394" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1038" y="409" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">early_alerts</text>
+<text x="1038" y="431" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1038" y="447" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_id / offering_id</text>
+<text x="1038" y="463" font-family="sans-serif" font-size="10.5" fill="#181A1F">instructor_id FK</text>
+<text x="1038" y="479" font-family="sans-serif" font-size="10.5" fill="#181A1F">flag_type / status</text>
+<rect x="1030" y="500" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1030" y="500" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1038" y="515" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">degree_plan_items</text>
+<text x="1038" y="537" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1038" y="553" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_id FK</text>
+<text x="1038" y="569" font-family="sans-serif" font-size="10.5" fill="#181A1F">term_label</text>
+<text x="1038" y="585" font-family="sans-serif" font-size="10.5" fill="#181A1F">course_id FK</text>
+<rect x="1030" y="606" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1030" y="606" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1038" y="621" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">admissions_applications</text>
+<text x="1038" y="643" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1038" y="659" font-family="sans-serif" font-size="10.5" fill="#181A1F">email / dept_id / entry_score</text>
+<text x="1038" y="675" font-family="sans-serif" font-size="10.5" fill="#181A1F">status</text>
+<text x="1038" y="691" font-family="sans-serif" font-size="10.5" fill="#181A1F">matriculated_student_id FK</text>
+<rect x="1030" y="712" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1030" y="712" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1038" y="727" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">transfer_credits</text>
+<text x="1038" y="749" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1038" y="765" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_id FK</text>
+<text x="1038" y="781" font-family="sans-serif" font-size="10.5" fill="#181A1F">institution / ext_code</text>
+<text x="1038" y="797" font-family="sans-serif" font-size="10.5" fill="#181A1F">equivalent_course_id FK</text>
+<rect x="1030" y="818" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1030" y="818" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1038" y="833" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">graduation_applications</text>
+<text x="1038" y="855" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1038" y="871" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_id FK</text>
+<text x="1038" y="887" font-family="sans-serif" font-size="10.5" fill="#181A1F">verification_code UNIQUE</text>
+<text x="1038" y="903" font-family="sans-serif" font-size="10.5" fill="#181A1F">status / gpa_verified</text>
+<rect x="1370" y="76" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1370" y="76" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1378" y="91" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">rooms</text>
+<text x="1378" y="113" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1378" y="129" font-family="sans-serif" font-size="10.5" fill="#181A1F">building / room_number</text>
+<text x="1378" y="145" font-family="sans-serif" font-size="10.5" fill="#181A1F">capacity</text>
+<text x="1378" y="161" font-family="sans-serif" font-size="10.5" fill="#181A1F">room_type</text>
+<rect x="1370" y="182" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1370" y="182" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1378" y="197" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">exam_schedules</text>
+<text x="1378" y="219" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1378" y="235" font-family="sans-serif" font-size="10.5" fill="#181A1F">offering_id FK UNIQUE</text>
+<text x="1378" y="251" font-family="sans-serif" font-size="10.5" fill="#181A1F">exam_date / start / end</text>
+<text x="1378" y="267" font-family="sans-serif" font-size="10.5" fill="#181A1F">room</text>
+<rect x="1370" y="288" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1370" y="288" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1378" y="303" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">office_hour_slots</text>
+<text x="1378" y="325" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1378" y="341" font-family="sans-serif" font-size="10.5" fill="#181A1F">instructor_id FK</text>
+<text x="1378" y="357" font-family="sans-serif" font-size="10.5" fill="#181A1F">day_of_week / start / end</text>
+<text x="1378" y="373" font-family="sans-serif" font-size="10.5" fill="#181A1F">location</text>
+<rect x="1370" y="394" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1370" y="394" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1378" y="409" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">office_hour_bookings</text>
+<text x="1378" y="431" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1378" y="447" font-family="sans-serif" font-size="10.5" fill="#181A1F">slot_id FK</text>
+<text x="1378" y="463" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_id FK</text>
+<text x="1378" y="479" font-family="sans-serif" font-size="10.5" fill="#181A1F">booking_date / status</text>
+<rect x="1370" y="500" width="290" height="78" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1370" y="500" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1378" y="515" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">evaluation_submissions</text>
+<text x="1378" y="537" font-family="sans-serif" font-size="10.5" fill="#181A1F">offering_id PK/FK</text>
+<text x="1378" y="553" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_id PK/FK</text>
+<text x="1378" y="569" font-family="sans-serif" font-size="10.5" fill="#181A1F">submitted_at (identity only)</text>
+<rect x="1370" y="590" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1370" y="590" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1378" y="605" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">evaluation_responses</text>
+<text x="1378" y="627" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1378" y="643" font-family="sans-serif" font-size="10.5" fill="#181A1F">offering_id FK</text>
+<text x="1378" y="659" font-family="sans-serif" font-size="10.5" fill="#181A1F">teaching/content/fairness</text>
+<text x="1378" y="675" font-family="sans-serif" font-size="10.5" fill="#181A1F">comment (no student_id)</text>
+<rect x="1370" y="696" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1370" y="696" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1378" y="711" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">academic_calendar_events</text>
+<text x="1378" y="733" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1378" y="749" font-family="sans-serif" font-size="10.5" fill="#181A1F">term_id FK</text>
+<text x="1378" y="765" font-family="sans-serif" font-size="10.5" fill="#181A1F">title / event_type</text>
+<text x="1378" y="781" font-family="sans-serif" font-size="10.5" fill="#181A1F">event_date</text>
+<rect x="1370" y="802" width="290" height="94" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.2"/>
+<rect x="1370" y="802" width="290" height="22" rx="4" fill="#7D1D2B"/>
+<text x="1378" y="817" font-family="monospace" font-size="11.5" font-weight="bold" fill="#FFFFFF">tuition_ledger</text>
+<text x="1378" y="839" font-family="sans-serif" font-size="10.5" fill="#181A1F">id PK</text>
+<text x="1378" y="855" font-family="sans-serif" font-size="10.5" fill="#181A1F">student_id FK</text>
+<text x="1378" y="871" font-family="sans-serif" font-size="10.5" fill="#181A1F">term_id FK</text>
+<text x="1378" y="887" font-family="sans-serif" font-size="10.5" fill="#181A1F">entry_type / amount</text>
 </svg>

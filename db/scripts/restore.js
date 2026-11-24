@@ -8,14 +8,31 @@ import { BACKUP_TABLES } from './backup.js';
 
 const IDENTITY_TABLES = new Set([
   'departments',
+  'rooms',
   'users',
-  'students',
   'instructors',
+  'students',
   'courses',
   'terms',
   'course_offerings',
   'offering_meetings',
   'enrollments',
+  'assessments',
+  'assessment_scores',
+  'course_announcements',
+  'grade_appeals',
+  'override_petitions',
+  'early_alerts',
+  'degree_plan_items',
+  'admissions_applications',
+  'transfer_credits',
+  'graduation_applications',
+  'exam_schedules',
+  'office_hour_slots',
+  'office_hour_bookings',
+  'evaluation_responses',
+  'academic_calendar_events',
+  'tuition_ledger',
   'attendance_sessions',
   'attendance_records',
   'academic_holds',
@@ -23,6 +40,17 @@ const IDENTITY_TABLES = new Set([
   'refresh_tokens',
   'audit_log'
 ]);
+
+const TRIGGERED_AUDIT_TABLES = [
+  'enrollments',
+  'terms',
+  'courses',
+  'grade_appeals',
+  'override_petitions',
+  'admissions_applications',
+  'graduation_applications',
+  'tuition_ledger'
+];
 
 export async function restoreBackup(db, dumpPath) {
   const compressed = fs.readFileSync(dumpPath);
@@ -38,9 +66,9 @@ export async function restoreBackup(db, dumpPath) {
   const snapshot = JSON.parse(zlib.gunzipSync(compressed).toString('utf8'));
 
   // Temporarily disable triggers during bulk restore so audit_log isn't duplicated
-  await db.exec('ALTER TABLE enrollments DISABLE TRIGGER ALL;');
-  await db.exec('ALTER TABLE terms DISABLE TRIGGER ALL;');
-  await db.exec('ALTER TABLE courses DISABLE TRIGGER ALL;');
+  for (const tbl of TRIGGERED_AUDIT_TABLES) {
+    await db.exec(`ALTER TABLE ${tbl} DISABLE TRIGGER ALL;`);
+  }
 
   try {
     await db.withTransaction(async (tx) => {
@@ -73,9 +101,9 @@ export async function restoreBackup(db, dumpPath) {
       }
     });
   } finally {
-    await db.exec('ALTER TABLE enrollments ENABLE TRIGGER ALL;');
-    await db.exec('ALTER TABLE terms ENABLE TRIGGER ALL;');
-    await db.exec('ALTER TABLE courses ENABLE TRIGGER ALL;');
+    for (const tbl of TRIGGERED_AUDIT_TABLES) {
+      await db.exec(`ALTER TABLE ${tbl} ENABLE TRIGGER ALL;`);
+    }
   }
 
   const restoredCounts = {};

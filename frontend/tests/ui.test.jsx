@@ -1,6 +1,9 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { VerifyCredentialModal } from '../src/components/VerifyCredentialModal.jsx';
+import { t } from '../src/i18n.js';
 import { LoginPage } from '../src/pages/LoginPage.jsx';
+import { PetitionsFinancePage } from '../src/pages/student/PetitionsFinancePage.jsx';
 import { TranscriptPage } from '../src/pages/student/TranscriptPage.jsx';
 import { projectWhatIfGpa } from '../src/utils/gpa.js';
 import { formatMeetings } from '../src/utils/schedule.js';
@@ -118,5 +121,68 @@ describe('TranscriptPage component', () => {
     });
     expect(screen.getByText(/Degree Audit/i)).toBeTruthy();
     expect(screen.getByText(/What-If/i)).toBeTruthy();
+  });
+
+  it('supports bilingual EN/AR translations and renders PetitionsFinancePage & VerifyCredentialModal', async () => {
+    expect(t('ar', 'navCatalogue')).toContain('دليل');
+    expect(t('en', 'navCoursework')).toBe('Coursework & Exams');
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url) => {
+        const u = String(url);
+        if (u.includes('/verify/')) {
+          return {
+            ok: true,
+            status: 200,
+            text: async () =>
+              JSON.stringify({
+                data: {
+                  verification_code: 'GAL-2027-CS-2024003',
+                  first_name: 'Salma',
+                  last_name: 'Hassan',
+                  student_number: '2024003',
+                  department_code: 'CS',
+                  department_name: 'Computer Science',
+                  target_term: 'Spring 2027',
+                  status: 'conferred',
+                  credits_verified: 132,
+                  gpa_verified: 3.85
+                }
+              })
+          };
+        }
+        if (u.includes('/me/finance')) {
+          return {
+            ok: true,
+            status: 200,
+            text: async () =>
+              JSON.stringify({
+                data: {
+                  summary: { total_charges: 4500, total_waivers: 1125, total_payments: 3375, net_balance: 0 },
+                  entries: []
+                }
+              })
+          };
+        }
+        return {
+          ok: true,
+          status: 200,
+          text: async () => JSON.stringify({ data: [] })
+        };
+      })
+    );
+
+    render(<PetitionsFinancePage notify={() => {}} />);
+    await waitFor(() => {
+      expect(screen.getByText(/Net Account Balance/i)).toBeTruthy();
+    });
+    expect(screen.getByText(/-1125\.00/)).toBeTruthy();
+
+    render(<VerifyCredentialModal open={true} onClose={() => {}} />);
+    fireEvent.click(screen.getByRole('button', { name: /^Verify Credential$/i }));
+    await waitFor(() => {
+      expect(screen.getByText(/Salma Hassan/i)).toBeTruthy();
+    });
   });
 });

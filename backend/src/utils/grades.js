@@ -12,13 +12,33 @@ export const GRADE_SCALE = Object.freeze({
   F: 0.0
 });
 
-export const VALID_GRADE_LETTERS = Object.keys(GRADE_SCALE);
+export const NON_GPA_GRADES = Object.freeze(['I', 'P', 'NP']);
+export const VALID_GRADE_LETTERS = Object.freeze([...Object.keys(GRADE_SCALE), ...NON_GPA_GRADES]);
 
 export function gradeLetterToPoints(letter) {
   if (!Object.hasOwn(GRADE_SCALE, letter)) {
     return null;
   }
   return GRADE_SCALE[letter];
+}
+
+export function isNonGpaGrade(letter) {
+  return NON_GPA_GRADES.includes(letter);
+}
+
+export function percentageToGradeLetter(pct) {
+  const v = Number(pct);
+  if (v >= 93) return 'A';
+  if (v >= 90) return 'A-';
+  if (v >= 87) return 'B+';
+  if (v >= 83) return 'B';
+  if (v >= 80) return 'B-';
+  if (v >= 77) return 'C+';
+  if (v >= 73) return 'C';
+  if (v >= 70) return 'C-';
+  if (v >= 67) return 'D+';
+  if (v >= 60) return 'D';
+  return 'F';
 }
 
 export function calculateGpa(items) {

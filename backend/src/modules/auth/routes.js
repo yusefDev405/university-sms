@@ -3,7 +3,7 @@ import { authenticate } from '../../middleware/auth.js';
 import { requireCsrfHeader } from '../../middleware/csrf.js';
 import { validate } from '../../middleware/validate.js';
 import * as controller from './controller.js';
-import { changePasswordSchema, loginSchema } from './schema.js';
+import { changePasswordSchema, loginSchema, totpDisableSchema, totpVerifySchema } from './schema.js';
 
 export function createAuthRouter({ authLimiter } = {}) {
   const router = Router();
@@ -14,6 +14,13 @@ export function createAuthRouter({ authLimiter } = {}) {
   router.post('/auth/logout', requireCsrfHeader, controller.logout);
   router.get('/me', authenticate, controller.me);
   router.patch('/me/password', authenticate, validate(changePasswordSchema), controller.changePassword);
+
+  router.get('/me/sessions', authenticate, controller.listSessions);
+  router.post('/me/sessions/revoke-others', authenticate, controller.revokeOtherSessions);
+
+  router.post('/me/2fa/setup', authenticate, controller.setupTotp);
+  router.post('/me/2fa/enable', authenticate, validate(totpVerifySchema), controller.enableTotp);
+  router.post('/me/2fa/disable', authenticate, validate(totpDisableSchema), controller.disableTotp);
 
   return router;
 }
