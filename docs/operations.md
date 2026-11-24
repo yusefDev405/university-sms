@@ -19,15 +19,15 @@ Copy `.env.example` to `.env` (never commit `.env`):
 ## 2. Backup & Verified Restore Procedure
 
 ### Local Zero-Heavy-Install Backup (`db/scripts/backup.js` & `verify_restore.js`)
-- **What is backed up**: All 12 normalized tables (`departments`, `users`, `students`, `instructors`, `courses`, `course_prerequisites`, `terms`, `course_offerings`, `offering_meetings`, `enrollments`, `refresh_tokens`, `audit_log`) as gzip-compressed JSON (`backups/university_YYYY-MM-DD.json.gz`) paired with a `.sha256` integrity digest.
+- **What is backed up**: All 36 normalized tables (`BACKUP_TABLES` allowlist in [backup.js](../db/scripts/backup.js)) as gzip-compressed JSON (`backups/university_YYYY-MM-DD.json.gz`) paired with a `.sha256` integrity digest.
 - **Retention**: Keeps the most recent 7 dumps automatically.
-- **Verified restore test** (`npm run db:verify-backup`): Restores the latest dump into a **fresh throwaway in-memory PostgreSQL database** after running all migrations from scratch, verifies SHA-256 checksum, and asserts exact row-count parity across all 12 tables.
+- **Verified restore test** (`npm run db:verify-backup`): Restores the latest dump into a **fresh throwaway in-memory PostgreSQL database** after running all migrations (`001`–`009`) from scratch, verifies SHA-256 checksum, and asserts exact row-count parity across all 36 tables.
 
 Latest observed verification output:
 - Command: `npm run db:verify-backup`
-- Result: `PASSED in 5495ms`
-- Artifact: `backups/university_2026-11-24.json.gz` (`2534 bytes`)
-- Verified row counts: `departments: 4, users: 12, students: 8, instructors: 3, courses: 10, course_prerequisites: 5, terms: 3, course_offerings: 10, offering_meetings: 12, enrollments: 18, refresh_tokens: 0, audit_log: 21`.
+- Result: `PASSED in 6191ms`
+- Artifact: `backups/university_2026-11-24.json.gz` (`5545 bytes`)
+- Verified: All 36 tables matched expected source row counts identically (including `departments: 4, rooms: 5, users: 12, instructors: 3, students: 8, courses: 10, course_offerings: 10, enrollments: 18, assessments: 3, tuition_ledger: 4, audit_log: 38`).
 
 ### Production PostgreSQL Backup (`db/scripts/backup.sh` & `restore.sh`)
 - Schedule `db/scripts/backup.sh` daily via cron (`pg_dump -Fc`) and store encrypted dumps in off-host object storage.
