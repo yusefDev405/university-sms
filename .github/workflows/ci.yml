@@ -9,9 +9,6 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: university-sms
 
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +24,7 @@ jobs:
       - name: SQL safety lint
         run: npm run lint:sql
 
-      - name: Run backend tests (unit, DB rules, API, BOLA, concurrency)
+      - name: Run backend & frontend test suites
         run: npm test
 
       - name: Build frontend

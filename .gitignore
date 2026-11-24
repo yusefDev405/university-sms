@@ -1,10 +1,28 @@
+# Dependencies
 node_modules/
+
+# Environment secrets (keep .env.example)
 .env
-.env.local
+.env.*
+!.env.example
+
+# Local database & backups
 data/
 backups/
+
+# Build & test outputs
 dist/
 coverage/
+*.errors.csv
 *.log
+
+# AI agent, editor & OS artifacts
+.agents/
+.claude/
+.cursor/
+.gemini/
+.vscode/
+.idea/
+skills-lock.json
 .DS_Store
 Thumbs.db
