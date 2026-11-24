@@ -1,0 +1,163 @@
+/* Swiss-Institutional Academic Registry design tokens with light-dark() + fallbacks */
+
+:root {
+  color-scheme: light dark;
+
+  --bg-light: #f7f5f0;
+  --bg-dark: #121417;
+  --surface-light: #ffffff;
+  --surface-dark: #1a1d22;
+  --surface-alt-light: #efece5;
+  --surface-alt-dark: #23272e;
+  --border-light: #d5cfc3;
+  --border-dark: #353b45;
+  --border-strong-light: #a59d8e;
+  --border-strong-dark: #5c6575;
+
+  --ink-light: #181a1f;
+  --ink-dark: #edebe6;
+  --ink-muted-light: #525760;
+  --ink-muted-dark: #aeb4be;
+
+  --accent-light: #7d1d2b;
+  --accent-dark: #e06c7c;
+  --accent-ink-light: #ffffff;
+  --accent-ink-dark: #1c080b;
+  --accent-soft-light: #f7e9eb;
+  --accent-soft-dark: #381920;
+
+  --success-light: #1b5e43;
+  --success-dark: #5dc296;
+  --success-soft-light: #e7f3ed;
+  --success-soft-dark: #153126;
+
+  --warn-light: #8f4f0b;
+  --warn-dark: #e6a64c;
+  --warn-soft-light: #fbf1e2;
+  --warn-soft-dark: #362712;
+
+  --danger-light: #b42318;
+  --danger-dark: #f2746b;
+  --danger-soft-light: #fce8e6;
+  --danger-soft-dark: #3d1816;
+
+  /* Baseline fallback values (light default, overridden by prefers-color-scheme and light-dark()) */
+  --bg: var(--bg-light);
+  --surface: var(--surface-light);
+  --surface-alt: var(--surface-alt-light);
+  --border: var(--border-light);
+  --border-strong: var(--border-strong-light);
+  --ink: var(--ink-light);
+  --ink-muted: var(--ink-muted-light);
+  --accent: var(--accent-light);
+  --accent-ink: var(--accent-ink-light);
+  --accent-soft: var(--accent-soft-light);
+  --success: var(--success-light);
+  --success-soft: var(--success-soft-light);
+  --warn: var(--warn-light);
+  --warn-soft: var(--warn-soft-light);
+  --danger: var(--danger-light);
+  --danger-soft: var(--danger-soft-light);
+
+  --scrollbar-track: #e8e4dc;
+  --scrollbar-thumb: #6f6a61;
+
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --shadow-subtle: 0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow-overlay: 0 10px 28px rgb(0 0 0 / 0.16);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: var(--bg-dark);
+    --surface: var(--surface-dark);
+    --surface-alt: var(--surface-alt-dark);
+    --border: var(--border-dark);
+    --border-strong: var(--border-strong-dark);
+    --ink: var(--ink-dark);
+    --ink-muted: var(--ink-muted-dark);
+    --accent: var(--accent-dark);
+    --accent-ink: var(--accent-ink-dark);
+    --accent-soft: var(--accent-soft-dark);
+    --success: var(--success-dark);
+    --success-soft: var(--success-soft-dark);
+    --warn: var(--warn-dark);
+    --warn-soft: var(--warn-soft-dark);
+    --danger: var(--danger-dark);
+    --danger-soft: var(--danger-soft-dark);
+    --scrollbar-track: #1f2329;
+    --scrollbar-thumb: #7b8290;
+  }
+}
+
+@supports (color: light-dark(white, black)) {
+  :root {
+    --bg: light-dark(var(--bg-light), var(--bg-dark));
+    --surface: light-dark(var(--surface-light), var(--surface-dark));
+    --surface-alt: light-dark(var(--surface-alt-light), var(--surface-alt-dark));
+    --border: light-dark(var(--border-light), var(--border-dark));
+    --border-strong: light-dark(var(--border-strong-light), var(--border-strong-dark));
+    --ink: light-dark(var(--ink-light), var(--ink-dark));
+    --ink-muted: light-dark(var(--ink-muted-light), var(--ink-muted-dark));
+    --accent: light-dark(var(--accent-light), var(--accent-dark));
+    --accent-ink: light-dark(var(--accent-ink-light), var(--accent-ink-dark));
+    --accent-soft: light-dark(var(--accent-soft-light), var(--accent-soft-dark));
+    --success: light-dark(var(--success-light), var(--success-dark));
+    --success-soft: light-dark(var(--success-soft-light), var(--success-soft-dark));
+    --warn: light-dark(var(--warn-light), var(--warn-dark));
+    --warn-soft: light-dark(var(--warn-soft-light), var(--warn-soft-dark));
+    --danger: light-dark(var(--danger-light), var(--danger-dark));
+    --danger-soft: light-dark(var(--danger-soft-light), var(--danger-soft-dark));
+    --scrollbar-track: light-dark(#e8e4dc, #1f2329);
+    --scrollbar-thumb: light-dark(#6f6a61, #7b8290);
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+:root {
+  accent-color: var(--accent);
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+@supports not (scrollbar-color: auto) {
+  .table-wrapper,
+  body {
+    scrollbar-width: auto;
+  }
+  .table-wrapper::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .table-wrapper::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+  }
+  .table-wrapper::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+}
+
+@media (forced-colors: active) {
+  :root {
+    --bg: Canvas;
+    --surface: Canvas;
+    --surface-alt: Canvas;
+    --border: CanvasText;
+    --border-strong: CanvasText;
+    --ink: CanvasText;
+    --ink-muted: GrayText;
+    --accent: Highlight;
+    --accent-ink: HighlightText;
+  }
+}

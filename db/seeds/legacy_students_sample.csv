@@ -1,0 +1,6 @@
+email,student_number,first_name,last_name,date_of_birth,department_code
+legacy.rania@galala.edu.eg,2026501,Rania,Mourad,2005-04-19,CS
+bad-email-format,2026502,Invalid,Email,2005-02-11,CS
+legacy.sherif@galala.edu.eg,2026503,Sherif,Gamal,2005-09-08,ENG
+legacy.baddept@galala.edu.eg,2026504,Unknown,Dept,2005-06-01,ASTRO
+legacy.baddob@galala.edu.eg,2026505,Bad,Date,19/04/2005,MATH

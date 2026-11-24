@@ -1,0 +1,359 @@
+openapi: 3.0.3
+info:
+  title: University Student Management System (USMS) API
+  version: 1.0.0
+  description: |
+    Versioned REST API (`/api/v1`) for course registration, grading, GPA & transcripts,
+    and registrar administration backed by PostgreSQL 16.
+servers:
+  - url: http://localhost:4000/api/v1
+    description: Local development server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            message: { type: string }
+            details: { type: array, items: { type: object } }
+security:
+  - bearerAuth: []
+paths:
+  /health:
+    get:
+      summary: Liveness and database connectivity check
+      security: []
+      responses:
+        '200': { description: Service and database healthy }
+  /auth/login:
+    post:
+      summary: Authenticate with email and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        '200': { description: Returns accessToken + user and sets HttpOnly refresh cookie }
+        '401': { description: Invalid credentials }
+  /auth/refresh:
+    post:
+      summary: Rotate refresh token cookie and issue new access token
+      security: []
+      parameters:
+        - in: header
+          name: X-Requested-With
+          required: true
+          schema: { type: string, enum: [XMLHttpRequest] }
+      responses:
+        '200': { description: Token rotated }
+        '401': { description: Missing, expired, or reused refresh token }
+  /auth/logout:
+    post:
+      summary: Revoke current refresh token and clear cookie
+      security: []
+      responses:
+        '204': { description: Logged out }
+  /me:
+    get:
+      summary: Current authenticated user and role profile
+      responses:
+        '200': { description: Current user object }
+  /me/password:
+    patch:
+      summary: Change current user password
+      responses:
+        '204': { description: Password updated and existing refresh tokens revoked }
+  /users:
+    get:
+      summary: List users (Admin)
+      responses:
+        '200': { description: Paginated users }
+    post:
+      summary: Create user and profile atomically (Admin)
+      responses:
+        '201': { description: Created user }
+  /users/{id}:
+    patch:
+      summary: Update user role or active flag (Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Updated user }
+  /instructors:
+    get:
+      summary: List instructors (Admin)
+      responses:
+        '200': { description: Instructor list }
+  /students:
+    get:
+      summary: List students (Admin, or Instructor own rosters)
+      responses:
+        '200': { description: Paginated student list }
+    post:
+      summary: Create student profile (Admin)
+      responses:
+        '201': { description: Student created }
+  /students/{id}:
+    get:
+      summary: View student profile (Admin, or Instructor own roster)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Student profile }
+        '403': { description: Forbidden if not on instructor roster }
+    patch:
+      summary: Update student profile (Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Updated student }
+  /students/{id}/transcript:
+    get:
+      summary: Get any student's transcript (Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Official transcript }
+  /students/{id}/transcript/pdf:
+    get:
+      summary: Download any student's official PDF transcript (Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: PDF binary stream }
+  /departments:
+    get:
+      summary: List departments
+      responses:
+        '200': { description: Department list }
+    post:
+      summary: Create department (Admin)
+      responses:
+        '201': { description: Department created }
+  /courses:
+    get:
+      summary: Browse course catalogue
+      responses:
+        '200': { description: Paginated courses with prerequisites }
+    post:
+      summary: Create course (Admin)
+      responses:
+        '201': { description: Course created }
+  /courses/{id}:
+    get:
+      summary: Get course details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Course object }
+    patch:
+      summary: Update course (Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Updated course }
+  /courses/{id}/prerequisites:
+    put:
+      summary: Replace course prerequisites (Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Updated prerequisites }
+  /terms:
+    get:
+      summary: List academic terms and registration windows
+      responses:
+        '200': { description: Terms list }
+    post:
+      summary: Create academic term (Admin)
+      responses:
+        '201': { description: Term created }
+  /terms/{id}:
+    patch:
+      summary: Update term / open or close registration (Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Term updated }
+  /offerings:
+    get:
+      summary: Browse course offerings with seat availability
+      responses:
+        '200': { description: Paginated offerings }
+    post:
+      summary: Create offering and meeting times (Admin)
+      responses:
+        '201': { description: Offering created }
+  /offerings/{id}:
+    get:
+      summary: Get single offering details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Offering details }
+    patch:
+      summary: Update offering or meetings (Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Offering updated }
+  /offerings/{id}/roster:
+    get:
+      summary: View enrolled/waitlisted roster (Own Instructor or Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Roster rows }
+        '403': { description: Forbidden for non-assigned instructor }
+  /offerings/{id}/grade-distribution:
+    get:
+      summary: Grade distribution counts for an offering (Own Instructor or Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Grade counts }
+  /enrollments:
+    post:
+      summary: Enroll current student into offering (calls enroll_student PL/pgSQL function)
+      responses:
+        '201': { description: Enrolled or waitlisted }
+        '403': { description: Registration closed or inactive student }
+        '409': { description: Prerequisites not met, schedule conflict, or already registered }
+  /enrollments/{id}:
+    delete:
+      summary: Drop an enrollment (Own Student or Admin; triggers waitlist promotion)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '204': { description: Dropped }
+  /me/enrollments:
+    get:
+      summary: Current student's enrollments and meeting schedule
+      responses:
+        '200': { description: Enrollment list }
+  /me/transcript:
+    get:
+      summary: Current student's official transcript and GPA
+      responses:
+        '200': { description: Transcript and GPA summary }
+  /me/transcript/pdf:
+    get:
+      summary: Download current student's official PDF transcript
+      responses:
+        '200': { description: PDF binary stream }
+  /me/attendance:
+    get:
+      summary: Current student's attendance summary and recent sessions
+      responses:
+        '200': { description: Attendance summary }
+  /offerings/{id}/attendance:
+    get:
+      summary: Offering attendance sessions and student summary (Own Instructor or Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Attendance sessions and summary }
+    post:
+      summary: Record or update attendance session for an offering (Own Instructor or Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '201': { description: Attendance session recorded }
+  /enrollments/{id}/grade:
+    put:
+      summary: Set grade for one enrollment (Own Instructor or Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Grade saved }
+  /offerings/{id}/grades/bulk:
+    post:
+      summary: Set grades for an offering atomically in one transaction
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: All grades saved }
+  /reports/enrollment-by-department:
+    get:
+      summary: Department enrollment aggregates & GPA rankings (Admin)
+      responses:
+        '200': { description: Department report + window-ranked standings }
+  /audit-log:
+    get:
+      summary: Search immutable audit log (Admin)
+      responses:
+        '200': { description: Paginated audit entries }
+  /admin/import/students:
+    post:
+      summary: Bulk import students from CSV with row-level validation (Admin)
+      responses:
+        '201': { description: Import summary with accepted count and rejected rows }

@@ -1,0 +1,150 @@
+{
+  "info": {
+    "name": "University Student Management System (USMS)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4000/api/v1" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      }
+    },
+    {
+      "name": "Student",
+      "item": [
+        {
+          "name": "Login (Student)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nadia.mansour@galala.edu.eg\",\n  \"password\": \"Student123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Browse Offerings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/offerings"
+          }
+        },
+        {
+          "name": "Enroll in Offering",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/enrollments",
+            "body": { "mode": "raw", "raw": "{\n  \"offeringId\": 8\n}" }
+          }
+        },
+        {
+          "name": "My Schedule",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/me/enrollments"
+          }
+        },
+        {
+          "name": "My Transcript & GPA",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/me/transcript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Instructor",
+      "item": [
+        {
+          "name": "Login (Instructor)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"amina.darwish@galala.edu.eg\",\n  \"password\": \"Instructor123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "My Offerings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/offerings?mine=true"
+          }
+        },
+        {
+          "name": "Offering Roster",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/offerings/5/roster"
+          }
+        },
+        {
+          "name": "Set Single Grade",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/enrollments/10/grade",
+            "body": { "mode": "raw", "raw": "{\n  \"gradeLetter\": \"A-\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Login (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@galala.edu.eg\",\n  \"password\": \"AdminPass123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Department Enrollment Report",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/reports/enrollment-by-department"
+          }
+        },
+        {
+          "name": "Audit Log",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/audit-log?entity=enrollments"
+          }
+        }
+      ]
+    }
+  ]
+}

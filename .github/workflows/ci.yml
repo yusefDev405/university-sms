@@ -1,0 +1,37 @@
+name: USMS CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: university-sms
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install backend & frontend dependencies
+        run: |
+          npm --prefix backend ci --no-audit --no-fund
+          npm --prefix frontend ci --no-audit --no-fund
+
+      - name: SQL safety lint
+        run: npm run lint:sql
+
+      - name: Run backend tests (unit, DB rules, API, BOLA, concurrency)
+        run: npm test
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Dependency audit (high/critical)
+        run: npm --prefix backend audit --audit-level=high

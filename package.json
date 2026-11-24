@@ -1,0 +1,22 @@
+{
+  "name": "university-sms",
+  "version": "1.0.0",
+  "private": true,
+  "description": "University Student Management System (USMS) with PostgreSQL (PGlite/pg), Express REST API, and React frontend.",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "test": "npm --prefix backend test",
+    "build": "npm --prefix frontend run build",
+    "lint:sql": "node scripts/lint-sql.js",
+    "db:migrate": "node db/scripts/migrate.js",
+    "db:seed": "node db/scripts/seed.js",
+    "db:reset": "node db/scripts/reset.js",
+    "db:backup": "node db/scripts/backup.js",
+    "db:verify-backup": "node db/scripts/verify_restore.js",
+    "db:explain": "node db/scripts/explain_demo.js",
+    "db:import-csv": "node db/scripts/import_legacy_csv.js"
+  }
+}

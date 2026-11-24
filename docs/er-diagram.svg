@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1435" height="615" viewBox="0 0 1435 615">
+<rect width="100%" height="100%" fill="#F7F5F0"/>
+<text x="40" y="30" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#181A1F">University Student Management System — Normalized 3NF ER Diagram (14 Tables)</text>
+<line x1="235" y1="90" x2="320" y2="90" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="277.5" y="86.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:1</text>
+<line x1="235" y1="130" x2="320" y2="280" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="277.5" y="201.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:1</text>
+<line x1="135" y1="204" x2="135" y2="235" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="135.0" y="215.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="135" y1="204" x2="40" y2="455" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="87.5" y="325.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="515" y1="90" x2="620" y2="90" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="567.5" y="86.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="715" y1="235" x2="715" y2="204" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="715.0" y="215.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="515" y1="290" x2="620" y2="290" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="567.5" y="286.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="415" y1="425" x2="415" y2="369" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="415.0" y="393.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="515" y1="480" x2="620" y2="480" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="567.5" y="476.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="715" y1="425" x2="715" y2="389" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="715.0" y="403.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="815" y1="290" x2="910" y2="290" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="862.5" y="286.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="910" y1="100" x2="815" y2="260" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="862.5" y="176.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="815" y1="480" x2="910" y2="465" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="862.5" y="468.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">M:N</text>
+<line x1="815" y1="240" x2="1200" y2="195" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="1007.5" y="213.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="1297" y1="274" x2="1297" y2="340" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="1297.0" y="303.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<rect x="40" y="50" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="40" y="50" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="50" y="67" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">users</text>
+<text x="50" y="94" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="50" y="114" font-family="sans-serif" font-size="11" fill="#181A1F">email UNIQUE</text>
+<text x="50" y="134" font-family="sans-serif" font-size="11" fill="#181A1F">password_hash</text>
+<text x="50" y="154" font-family="sans-serif" font-size="11" fill="#181A1F">role</text>
+<text x="50" y="174" font-family="sans-serif" font-size="11" fill="#181A1F">failed_login_attempts</text>
+<text x="50" y="194" font-family="sans-serif" font-size="11" fill="#181A1F">locked_until</text>
+<rect x="40" y="235" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="40" y="235" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="50" y="252" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">refresh_tokens</text>
+<text x="50" y="279" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="50" y="299" font-family="sans-serif" font-size="11" fill="#181A1F">user_id FK</text>
+<text x="50" y="319" font-family="sans-serif" font-size="11" fill="#181A1F">family_id</text>
+<text x="50" y="339" font-family="sans-serif" font-size="11" fill="#181A1F">token_hash UNIQUE</text>
+<text x="50" y="359" font-family="sans-serif" font-size="11" fill="#181A1F">expires_at</text>
+<text x="50" y="379" font-family="sans-serif" font-size="11" fill="#181A1F">revoked_at</text>
+<rect x="40" y="425" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="40" y="425" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="50" y="442" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">audit_log</text>
+<text x="50" y="469" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="50" y="489" font-family="sans-serif" font-size="11" fill="#181A1F">actor_user_id FK</text>
+<text x="50" y="509" font-family="sans-serif" font-size="11" fill="#181A1F">action</text>
+<text x="50" y="529" font-family="sans-serif" font-size="11" fill="#181A1F">entity / entity_id</text>
+<text x="50" y="549" font-family="sans-serif" font-size="11" fill="#181A1F">old_data JSONB</text>
+<text x="50" y="569" font-family="sans-serif" font-size="11" fill="#181A1F">new_data JSONB</text>
+<rect x="320" y="50" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="320" y="50" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="330" y="67" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">students</text>
+<text x="330" y="94" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="330" y="114" font-family="sans-serif" font-size="11" fill="#181A1F">user_id FK UNIQUE</text>
+<text x="330" y="134" font-family="sans-serif" font-size="11" fill="#181A1F">student_number UNIQUE</text>
+<text x="330" y="154" font-family="sans-serif" font-size="11" fill="#181A1F">first_name / last_name</text>
+<text x="330" y="174" font-family="sans-serif" font-size="11" fill="#181A1F">department_id FK</text>
+<text x="330" y="194" font-family="sans-serif" font-size="11" fill="#181A1F">status</text>
+<rect x="320" y="235" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="320" y="235" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="330" y="252" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">instructors</text>
+<text x="330" y="279" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="330" y="299" font-family="sans-serif" font-size="11" fill="#181A1F">user_id FK UNIQUE</text>
+<text x="330" y="319" font-family="sans-serif" font-size="11" fill="#181A1F">department_id FK</text>
+<text x="330" y="339" font-family="sans-serif" font-size="11" fill="#181A1F">first_name / last_name</text>
+<text x="330" y="359" font-family="sans-serif" font-size="11" fill="#181A1F">title</text>
+<rect x="320" y="425" width="195" height="114" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="320" y="425" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="330" y="442" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">departments</text>
+<text x="330" y="469" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="330" y="489" font-family="sans-serif" font-size="11" fill="#181A1F">code UNIQUE</text>
+<text x="330" y="509" font-family="sans-serif" font-size="11" fill="#181A1F">name</text>
+<text x="330" y="529" font-family="sans-serif" font-size="11" fill="#181A1F">created_at</text>
+<rect x="620" y="50" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="620" y="50" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="630" y="67" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">enrollments</text>
+<text x="630" y="94" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="630" y="114" font-family="sans-serif" font-size="11" fill="#181A1F">student_id FK</text>
+<text x="630" y="134" font-family="sans-serif" font-size="11" fill="#181A1F">offering_id FK</text>
+<text x="630" y="154" font-family="sans-serif" font-size="11" fill="#181A1F">status</text>
+<text x="630" y="174" font-family="sans-serif" font-size="11" fill="#181A1F">grade_points</text>
+<text x="630" y="194" font-family="sans-serif" font-size="11" fill="#181A1F">grade_letter</text>
+<rect x="620" y="235" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="620" y="235" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="630" y="252" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">course_offerings</text>
+<text x="630" y="279" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="630" y="299" font-family="sans-serif" font-size="11" fill="#181A1F">course_id FK</text>
+<text x="630" y="319" font-family="sans-serif" font-size="11" fill="#181A1F">term_id FK</text>
+<text x="630" y="339" font-family="sans-serif" font-size="11" fill="#181A1F">instructor_id FK</text>
+<text x="630" y="359" font-family="sans-serif" font-size="11" fill="#181A1F">section / capacity</text>
+<text x="630" y="379" font-family="sans-serif" font-size="11" fill="#181A1F">room</text>
+<rect x="620" y="425" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="620" y="425" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="630" y="442" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">courses</text>
+<text x="630" y="469" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="630" y="489" font-family="sans-serif" font-size="11" fill="#181A1F">code UNIQUE</text>
+<text x="630" y="509" font-family="sans-serif" font-size="11" fill="#181A1F">title</text>
+<text x="630" y="529" font-family="sans-serif" font-size="11" fill="#181A1F">credits CHECK 1..6</text>
+<text x="630" y="549" font-family="sans-serif" font-size="11" fill="#181A1F">department_id FK</text>
+<rect x="910" y="50" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="910" y="50" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="920" y="67" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">terms</text>
+<text x="920" y="94" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="920" y="114" font-family="sans-serif" font-size="11" fill="#181A1F">name UNIQUE</text>
+<text x="920" y="134" font-family="sans-serif" font-size="11" fill="#181A1F">start_date / end_date</text>
+<text x="920" y="154" font-family="sans-serif" font-size="11" fill="#181A1F">registration_opens</text>
+<text x="920" y="174" font-family="sans-serif" font-size="11" fill="#181A1F">registration_closes</text>
+<rect x="910" y="235" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="910" y="235" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="920" y="252" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">offering_meetings</text>
+<text x="920" y="279" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="920" y="299" font-family="sans-serif" font-size="11" fill="#181A1F">offering_id FK</text>
+<text x="920" y="319" font-family="sans-serif" font-size="11" fill="#181A1F">day_of_week</text>
+<text x="920" y="339" font-family="sans-serif" font-size="11" fill="#181A1F">start_time</text>
+<text x="920" y="359" font-family="sans-serif" font-size="11" fill="#181A1F">end_time</text>
+<rect x="910" y="425" width="195" height="74" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="910" y="425" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="920" y="442" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">course_prerequisites</text>
+<text x="920" y="469" font-family="sans-serif" font-size="11" fill="#181A1F">course_id PK/FK</text>
+<text x="920" y="489" font-family="sans-serif" font-size="11" fill="#181A1F">prerequisite_id PK/FK</text>
+<rect x="1200" y="140" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="1200" y="140" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="1210" y="157" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">attendance_sessions</text>
+<text x="1210" y="184" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="1210" y="204" font-family="sans-serif" font-size="11" fill="#181A1F">offering_id FK</text>
+<text x="1210" y="224" font-family="sans-serif" font-size="11" fill="#181A1F">session_date</text>
+<text x="1210" y="244" font-family="sans-serif" font-size="11" fill="#181A1F">topic</text>
+<text x="1210" y="264" font-family="sans-serif" font-size="11" fill="#181A1F">created_by FK</text>
+<rect x="1200" y="340" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="1200" y="340" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="1210" y="357" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">attendance_records</text>
+<text x="1210" y="384" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="1210" y="404" font-family="sans-serif" font-size="11" fill="#181A1F">session_id FK</text>
+<text x="1210" y="424" font-family="sans-serif" font-size="11" fill="#181A1F">student_id FK</text>
+<text x="1210" y="444" font-family="sans-serif" font-size="11" fill="#181A1F">status</text>
+<text x="1210" y="464" font-family="sans-serif" font-size="11" fill="#181A1F">note</text>
+</svg>
