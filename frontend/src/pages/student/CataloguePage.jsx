@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { apiRequest } from '../../api/client.js';
+import { ModalDialog } from '../../components/ModalDialog.jsx';
 import { ResponsiveTable } from '../../components/ResponsiveTable.jsx';
 import { StatusBadge } from '../../components/StatusBadge.jsx';
 import { formatMeetings } from '../../utils/schedule.js';
@@ -21,6 +22,7 @@ export function CataloguePage({ notify }) {
   const [offerings, setOfferings] = useState([]);
   const [meta, setMeta] = useState({ page: 1, limit: 10, total: 0 });
   const [myEnrollments, setMyEnrollments] = useState([]);
+  const [myHolds, setMyHolds] = useState([]);
   const [passedCourseCodes, setPassedCourseCodes] = useState(new Set());
   const [termId, setTermId] = useState('');
   const [department, setDepartment] = useState('');
@@ -29,6 +31,8 @@ export function CataloguePage({ notify }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [enrollingId, setEnrollingId] = useState(null);
+  const [swapTarget, setSwapTarget] = useState(null);
+  const [dropEnrollmentId, setDropEnrollmentId] = useState('');
 
   const loadData = useCallback(async (selectedTermId, selectedDept, searchQuery, targetPage = 1) => {
     setLoading(true);
@@ -41,18 +45,20 @@ export function CataloguePage({ notify }) {
       qs.set('page', String(targetPage));
       qs.set('limit', '10');
 
-      const [offRes, myRes, transRes] = await Promise.all([
+      const [offRes, myRes, transRes, holdsRes] = await Promise.all([
         apiRequest(`/offerings?${qs.toString()}`),
         apiRequest('/me/enrollments'),
-        apiRequest('/me/transcript')
+        apiRequest('/me/transcript'),
+        apiRequest('/me/holds')
       ]);
       setOfferings(offRes.data || []);
       setMeta(offRes.meta || { page: targetPage, limit: 10, total: 0 });
       setMyEnrollments(myRes.data || []);
+      setMyHolds(holdsRes.data || []);
 
       const passed = new Set(
         (transRes.data?.courses || [])
-          .filter((c) => Number(c.grade_points) >= 1.0)
+          .filter((c) => c.status === 'completed' && Number(c.grade_points) >= 1.0)
           .map((c) => c.course_code)
       );
       setPassedCourseCodes(passed);
@@ -121,13 +127,40 @@ export function CataloguePage({ notify }) {
     }
   };
 
+  const handleSwapSubmit = async (e) => {
+    e.preventDefault();
+    if (!swapTarget || !dropEnrollmentId) return;
+    try {
+      const res = await apiRequest('/enrollments/swap', {
+        method: 'POST',
+        body: {
+          dropEnrollmentId: Number(dropEnrollmentId),
+          targetOfferingId: swapTarget.offering_id
+        }
+      });
+      setSwapTarget(null);
+      notify(`Swapped into ${swapTarget.course_code} (${res.data.status}).`, 'success');
+      await loadData(termId, department, search, page);
+    } catch (err) {
+      setError(`Swap failed (original course kept): ${err.message}`);
+      notify(err.message, 'error');
+    }
+  };
+
   const myStatusByOffering = new Map(
     myEnrollments
-      .filter((e) => e.status !== 'dropped')
+      .filter((e) => e.status !== 'dropped' && e.status !== 'withdrawn')
       .map((e) => [Number(e.offering_id), e.status])
   );
 
+  const swappableEnrollments = myEnrollments.filter(
+    (e) => e.status === 'enrolled' || e.status === 'waitlisted'
+  );
+
   const getEligibilityHint = (row) => {
+    if (myHolds.length > 0) {
+      return { ok: false, text: 'Registration hold active' };
+    }
     const missing = (row.prerequisites || []).filter((p) => !passedCourseCodes.has(p.code));
     if (missing.length > 0) {
       return { ok: false, text: `Missing prereq: ${missing.map((m) => m.code).join(', ')}` };
@@ -159,10 +192,27 @@ export function CataloguePage({ notify }) {
             <div>{row.course_title}</div>
             <div className="muted" style={{ fontSize: '0.8rem' }}>
               {row.credits} cr · {row.department_code}
-              {row.prerequisites?.length > 0
-                ? ` · Prereqs: ${row.prerequisites.map((p) => p.code).join(', ')}`
-                : ''}
             </div>
+            {row.prerequisites?.length > 0 ? (
+              <details style={{ marginBlockStart: '0.25rem' }}>
+                <summary style={{ cursor: 'pointer', fontSize: '0.8rem' }}>
+                  Prerequisite chain ({row.prerequisites.length})
+                </summary>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBlockStart: '0.25rem' }}>
+                  {row.prerequisites.map((p) => {
+                    const met = passedCourseCodes.has(p.code);
+                    return (
+                      <span key={p.id} className="prereq-pill">
+                        <span aria-hidden="true">{met ? '✓' : '×'}</span>
+                        <span>{p.code}</span>
+                      </span>
+                    );
+                  })}
+                  <span aria-hidden="true">→</span>
+                  <span className="prereq-pill">{row.course_code}</span>
+                </div>
+              </details>
+            ) : null}
             {!elig.ok ? (
               <div style={{ marginBlockStart: '0.25rem' }}>
                 <StatusBadge status="suspended" label={elig.text} />
@@ -213,19 +263,34 @@ export function CataloguePage({ notify }) {
           return <StatusBadge status="closed" label="Window Closed" />;
         }
         const isFull = Number(row.seats_left) <= 0;
+        const canSwap = swappableEnrollments.some((e) => Number(e.term_id) === Number(row.term_id));
         return (
-          <button
-            type="button"
-            className={isFull ? '' : 'primary'}
-            disabled={enrollingId === row.offering_id}
-            onClick={() => handleEnroll(row)}
-          >
-            {enrollingId === row.offering_id
-              ? 'Submitting…'
-              : isFull
-                ? 'Join Waitlist'
-                : 'Enroll'}
-          </button>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+            <button
+              type="button"
+              className={isFull ? '' : 'primary'}
+              disabled={enrollingId === row.offering_id}
+              onClick={() => handleEnroll(row)}
+            >
+              {enrollingId === row.offering_id
+                ? 'Submitting…'
+                : isFull
+                  ? 'Join Waitlist'
+                  : 'Enroll'}
+            </button>
+            {canSwap ? (
+              <button
+                type="button"
+                onClick={() => {
+                  const sameTerm = swappableEnrollments.filter((e) => Number(e.term_id) === Number(row.term_id));
+                  setDropEnrollmentId(String(sameTerm[0]?.enrollment_id || ''));
+                  setSwapTarget(row);
+                }}
+              >
+                Swap
+              </button>
+            ) : null}
+          </div>
         );
       }
     }
@@ -239,6 +304,15 @@ export function CataloguePage({ notify }) {
           <h1 id="catalogue-heading">Course Catalogue &amp; Offerings</h1>
         </div>
       </div>
+
+      {myHolds.length > 0 ? (
+        <div className="banner banner--error" role="alert">
+          <div>
+            <strong>Registration Hold Active:</strong>{' '}
+            {myHolds.map((h) => h.reason).join('; ')}. Contact the Registrar to resolve before enrolling.
+          </div>
+        </div>
+      ) : null}
 
       {error ? (
         <div className="banner banner--error" role="alert">
@@ -344,6 +418,42 @@ export function CataloguePage({ notify }) {
           </div>
         </>
       )}
+
+      <ModalDialog
+        open={Boolean(swapTarget)}
+        title={swapTarget ? `Atomic Swap into ${swapTarget.course_code}` : 'Atomic Course Swap'}
+        onClose={() => setSwapTarget(null)}
+      >
+        {swapTarget ? (
+          <form onSubmit={handleSwapSubmit}>
+            <p className="muted">
+              Select which active registration to drop in exchange for <strong>{swapTarget.course_code}</strong>.
+              If enrollment fails, your original seat is kept automatically.
+            </p>
+            <div className="field">
+              <label htmlFor="swap-drop-select">Course to Drop</label>
+              <select
+                id="swap-drop-select"
+                required
+                value={dropEnrollmentId}
+                onChange={(e) => setDropEnrollmentId(e.target.value)}
+              >
+                {swappableEnrollments
+                  .filter((e) => Number(e.term_id) === Number(swapTarget.term_id))
+                  .map((e) => (
+                    <option key={e.enrollment_id} value={e.enrollment_id}>
+                      {e.course_code} — {e.course_title} ({e.status})
+                    </option>
+                  ))}
+              </select>
+            </div>
+            <div className="dialog-actions">
+              <button type="button" onClick={() => setSwapTarget(null)}>Cancel</button>
+              <button type="submit" className="primary">Confirm Atomic Swap</button>
+            </div>
+          </form>
+        ) : null}
+      </ModalDialog>
     </section>
   );
 }

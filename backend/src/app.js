@@ -19,6 +19,7 @@ import departmentsRouter from './modules/departments/routes.js';
 import enrollmentsRouter from './modules/enrollments/routes.js';
 import gradesRouter from './modules/grades/routes.js';
 import offeringsRouter from './modules/offerings/routes.js';
+import policiesRouter from './modules/policies/routes.js';
 import studentsRouter from './modules/students/routes.js';
 import termsRouter from './modules/terms/routes.js';
 import usersRouter from './modules/users/routes.js';
@@ -138,6 +139,7 @@ export function createApp({ enableRateLimit = env.NODE_ENV !== 'test' } = {}) {
   api.use(enrollmentsRouter);
   api.use(gradesRouter);
   api.use(attendanceRouter);
+  api.use(policiesRouter);
   api.use(adminRouter);
 
   app.use('/api/v1', api);

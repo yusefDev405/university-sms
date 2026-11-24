@@ -7,9 +7,9 @@ Designed for **zero heavy installation** (no Docker, no local PostgreSQL server 
 ## Tech Stack
 - **Backend**: Node.js, Express, Zod, `bcryptjs`, `jsonwebtoken`, `helmet`, `express-rate-limit`, Swagger UI (`/api/docs`)
 - **Database**: PostgreSQL 16 via embedded `@electric-sql/pglite` (default local mode) or external `pg` (`DATABASE_URL` in production), raw parameterized SQL, PL/pgSQL stored function (`enroll_student` with capacity, prerequisites, time-clash, and probation credit-limit enforcement), triggers (`audit_row`, `promote_waitlist_on_drop`), views (`v_student_transcript`, `v_student_gpa`, `v_offering_availability`, `v_instructor_roster`, `v_attendance_summary`)
-- **Features**: Course registration & waitlist auto-promotion, attendance register & student percentages, single & atomic bulk grading with distribution chart & CSV export, downloadable official `.pdf` transcripts, account lockout & password rotation, admin CRUD/prerequisites/audit trail/reports, and CLI + API bulk CSV student import
+- **Features**: Course registration, waitlist queue positions & auto-promotion, atomic course swap, academic registration holds, course-repeat GPA replacement, withdrawal (`W`) deadlines, degree audit & What-If GPA simulator, attendance register, single & atomic bulk grading with distribution chart & CSV export, instructor weekly timetable, downloadable official `.pdf` transcripts, automated waitlist/grade notification inbox, account lockout & password rotation, admin CRUD/prerequisites/audit trail/reports, and CLI + API bulk CSV student import
 - **Frontend**: React 19 + Vite, semantic HTML, handcrafted responsive CSS with light/dark mode (`light-dark()`), `@container` responsive tables, native `<dialog>` modals, and `popover="manual"` notifications
-- **Testing**: Vitest + Supertest (unit, DB rules, API integration, BOLA/RBAC authorization, and 20-request concurrency test)
+- **Testing**: Vitest + Supertest (backend unit, DB rules, API integration, BOLA/RBAC authorization, 20-request concurrency) + Vitest & React Testing Library (frontend UI & utility tests)
 
 ## Out of Scope (Intentional)
 - Tuition/fee payments

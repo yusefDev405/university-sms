@@ -130,4 +130,48 @@ describe('Database rules: enroll_student(), triggers, and views', () => {
       db.query('SELECT enroll_student($1, $2)', [karim.rows[0].id, o2.rows[0].id])
     ).rejects.toThrow(/Credit limit exceeded \(max 12 credits\)/);
   });
+
+  it('replaces repeated course grades with the highest grade in v_student_gpa', async () => {
+    // Student 2024006 (Karim) failed CS101 (0.00, 3cr) in Fall 2026 -> GPA 0.00.
+    // Retaking CS101 in Spring 2027 and earning A (4.00) replaces the F in GPA!
+    const karim = await db.query("SELECT id FROM students WHERE student_number = '2024006'");
+    const cs101Spring = await db.query(
+      `SELECT o.id FROM course_offerings o
+       JOIN courses c ON c.id = o.course_id
+       JOIN terms t ON t.id = o.term_id
+       WHERE c.code = 'CS101' AND t.name = 'Spring 2027'`
+    );
+    await db.query(
+      `INSERT INTO enrollments (student_id, offering_id, status, grade_points, grade_letter)
+       VALUES ($1, $2, 'completed', 4.00, 'A')`,
+      [karim.rows[0].id, cs101Spring.rows[0].id]
+    );
+
+    const gpaRes = await db.query('SELECT gpa, credits_earned FROM v_student_gpa WHERE student_id = $1', [
+      karim.rows[0].id
+    ]);
+    expect(Number(gpaRes.rows[0].gpa)).toBe(4.0);
+    expect(gpaRes.rows[0].credits_earned).toBe(3);
+  });
+
+  it('blocks enrollment when an active academic_hold exists until resolved', async () => {
+    const salma = await db.query("SELECT id FROM students WHERE student_number = '2024003'");
+    const math201 = await db.query(
+      `SELECT o.id FROM course_offerings o
+       JOIN courses c ON c.id = o.course_id
+       JOIN terms t ON t.id = o.term_id
+       WHERE c.code = 'MATH201' AND t.name = 'Spring 2027'`
+    );
+    const hold = await db.query(
+      "INSERT INTO academic_holds (student_id, reason) VALUES ($1, 'Advising hold') RETURNING id",
+      [salma.rows[0].id]
+    );
+    await expect(
+      db.query('SELECT enroll_student($1, $2)', [salma.rows[0].id, math201.rows[0].id])
+    ).rejects.toThrow(/Registration hold active/);
+
+    await db.query('UPDATE academic_holds SET resolved_at = now() WHERE id = $1', [hold.rows[0].id]);
+    const ok = await db.query('SELECT enroll_student($1, $2) AS status', [salma.rows[0].id, math201.rows[0].id]);
+    expect(ok.rows[0].status).toBe('enrolled');
+  });
 });

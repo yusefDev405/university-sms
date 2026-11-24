@@ -98,7 +98,15 @@ export function SchedulePage({ notify }) {
     {
       key: 'status',
       header: 'Status',
-      render: (r) => <StatusBadge status={r.status} />
+      render: (r) =>
+        r.status === 'waitlisted' && r.waitlist_position ? (
+          <StatusBadge
+            status="waitlisted"
+            label={`Waitlisted #${r.waitlist_position} of ${r.waitlist_total}`}
+          />
+        ) : (
+          <StatusBadge status={r.status} />
+        )
     },
     {
       key: 'action',

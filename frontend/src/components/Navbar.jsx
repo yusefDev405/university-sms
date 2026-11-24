@@ -1,6 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 
-export function Navbar({ user, navItems, activePage, onNavigate, onOpenPassword, onLogout, theme, onToggleTheme }) {
+export function Navbar({
+  user,
+  navItems,
+  activePage,
+  onNavigate,
+  onOpenPassword,
+  onLogout,
+  theme,
+  onToggleTheme,
+  notifications = [],
+  onMarkNotificationRead
+}) {
   const headerRef = useRef(null);
   const innerRef = useRef(null);
   const menuRef = useRef(null);
@@ -132,6 +143,47 @@ export function Navbar({ user, navItems, activePage, onNavigate, onOpenPassword,
           <span className="role-pill" title={user.email}>
             {user.role}
           </span>
+          <button
+            type="button"
+            className="ghost notif-trigger"
+            popoverTarget="notif-popover"
+            popoverTargetAction="toggle"
+            aria-label={`Notifications (${notifications.filter((n) => !n.read_at).length} unread)`}
+          >
+            Inbox ({notifications.filter((n) => !n.read_at).length})
+          </button>
+          <div id="notif-popover" popover="auto" className="notif-popover" aria-label="Notification inbox">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBlockEnd: '0.5rem' }}>
+              <strong>Notifications</strong>
+              <button type="button" className="ghost" popoverTarget="notif-popover" popoverTargetAction="hide">
+                Close
+              </button>
+            </div>
+            {notifications.length === 0 ? (
+              <p className="muted" style={{ margin: 0, fontSize: '0.84rem' }}>No notifications yet.</p>
+            ) : (
+              notifications.map((n) => (
+                <div key={n.id} className="notif-item">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', alignItems: 'baseline' }}>
+                    <strong style={{ fontSize: '0.86rem' }}>{n.title}</strong>
+                    {!n.read_at ? (
+                      <button
+                        type="button"
+                        className="ghost"
+                        style={{ padding: '0.1rem 0.35rem', minBlockSize: 'auto', fontSize: '0.76rem' }}
+                        onClick={() => onMarkNotificationRead?.(n.id)}
+                      >
+                        Mark read
+                      </button>
+                    ) : (
+                      <span className="muted" style={{ fontSize: '0.75rem' }}>Read</span>
+                    )}
+                  </div>
+                  <p style={{ margin: '0.2rem 0 0', fontSize: '0.82rem' }}>{n.message}</p>
+                </div>
+              ))
+            )}
+          </div>
           <button
             type="button"
             className="ghost"

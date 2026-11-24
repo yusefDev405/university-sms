@@ -192,4 +192,14 @@ FROM (VALUES
 JOIN attendance_sessions ats ON ats.session_date = v.session_date::DATE
 JOIN students s ON s.student_number = v.student_number;
 
+-- 12. Sample Notification & Historical Resolved Hold
+INSERT INTO notifications (user_id, title, message)
+SELECT id, 'Spring 2027 Registration Open', 'Course registration for Spring 2027 is open. Check prerequisites and meeting times before enrolling.'
+FROM users WHERE lower(email) = 'nadia.mansour@galala.edu.eg';
+
+INSERT INTO academic_holds (student_id, reason, placed_by, resolved_at, resolved_by)
+SELECT s.id, 'Library clearance verified', a.id, now() - interval '5 days', a.id
+FROM students s, users a
+WHERE s.student_number = '2024006' AND lower(a.email) = 'admin@galala.edu.eg';
+
 COMMIT;

@@ -18,6 +18,8 @@ const IDENTITY_TABLES = new Set([
   'enrollments',
   'attendance_sessions',
   'attendance_records',
+  'academic_holds',
+  'notifications',
   'refresh_tokens',
   'audit_log'
 ]);

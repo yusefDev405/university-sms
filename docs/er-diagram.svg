@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1435" height="615" viewBox="0 0 1435 615">
+<svg xmlns="http://www.w3.org/2000/svg" width="1435" height="790" viewBox="0 0 1435 790">
 <rect width="100%" height="100%" fill="#F7F5F0"/>
-<text x="40" y="30" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#181A1F">University Student Management System — Normalized 3NF ER Diagram (14 Tables)</text>
+<text x="40" y="30" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#181A1F">University Student Management System — Normalized 3NF ER Diagram (16 Tables)</text>
 <line x1="235" y1="90" x2="320" y2="90" stroke="#7D1D2B" stroke-width="1.6"/>
 <text x="277.5" y="86.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:1</text>
 <line x1="235" y1="130" x2="320" y2="280" stroke="#7D1D2B" stroke-width="1.6"/>
@@ -9,8 +9,12 @@
 <text x="135.0" y="215.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
 <line x1="135" y1="204" x2="40" y2="455" stroke="#7D1D2B" stroke-width="1.6"/>
 <text x="87.5" y="325.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="135" y1="204" x2="40" y2="645" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="87.5" y="420.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
 <line x1="515" y1="90" x2="620" y2="90" stroke="#7D1D2B" stroke-width="1.6"/>
 <text x="567.5" y="86.0" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
+<line x1="415" y1="204" x2="415" y2="615" stroke="#7D1D2B" stroke-width="1.6"/>
+<text x="415.0" y="405.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
 <line x1="715" y1="235" x2="715" y2="204" stroke="#7D1D2B" stroke-width="1.6"/>
 <text x="715.0" y="215.5" font-family="monospace" font-size="11" fill="#7D1D2B" text-anchor="middle">1:N</text>
 <line x1="515" y1="290" x2="620" y2="290" stroke="#7D1D2B" stroke-width="1.6"/>
@@ -58,6 +62,15 @@
 <text x="50" y="529" font-family="sans-serif" font-size="11" fill="#181A1F">entity / entity_id</text>
 <text x="50" y="549" font-family="sans-serif" font-size="11" fill="#181A1F">old_data JSONB</text>
 <text x="50" y="569" font-family="sans-serif" font-size="11" fill="#181A1F">new_data JSONB</text>
+<rect x="40" y="615" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="40" y="615" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="50" y="632" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">notifications</text>
+<text x="50" y="659" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="50" y="679" font-family="sans-serif" font-size="11" fill="#181A1F">user_id FK</text>
+<text x="50" y="699" font-family="sans-serif" font-size="11" fill="#181A1F">title</text>
+<text x="50" y="719" font-family="sans-serif" font-size="11" fill="#181A1F">message</text>
+<text x="50" y="739" font-family="sans-serif" font-size="11" fill="#181A1F">read_at</text>
+<text x="50" y="759" font-family="sans-serif" font-size="11" fill="#181A1F">created_at</text>
 <rect x="320" y="50" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
 <rect x="320" y="50" width="195" height="26" rx="4" fill="#7D1D2B"/>
 <text x="330" y="67" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">students</text>
@@ -82,6 +95,14 @@
 <text x="330" y="489" font-family="sans-serif" font-size="11" fill="#181A1F">code UNIQUE</text>
 <text x="330" y="509" font-family="sans-serif" font-size="11" fill="#181A1F">name</text>
 <text x="330" y="529" font-family="sans-serif" font-size="11" fill="#181A1F">created_at</text>
+<rect x="320" y="615" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
+<rect x="320" y="615" width="195" height="26" rx="4" fill="#7D1D2B"/>
+<text x="330" y="632" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">academic_holds</text>
+<text x="330" y="659" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
+<text x="330" y="679" font-family="sans-serif" font-size="11" fill="#181A1F">student_id FK</text>
+<text x="330" y="699" font-family="sans-serif" font-size="11" fill="#181A1F">reason</text>
+<text x="330" y="719" font-family="sans-serif" font-size="11" fill="#181A1F">placed_by FK</text>
+<text x="330" y="739" font-family="sans-serif" font-size="11" fill="#181A1F">resolved_at / resolved_by</text>
 <rect x="620" y="50" width="195" height="154" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
 <rect x="620" y="50" width="195" height="26" rx="4" fill="#7D1D2B"/>
 <text x="630" y="67" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">enrollments</text>
@@ -114,8 +135,8 @@
 <text x="920" y="94" font-family="sans-serif" font-size="11" fill="#181A1F">id PK</text>
 <text x="920" y="114" font-family="sans-serif" font-size="11" fill="#181A1F">name UNIQUE</text>
 <text x="920" y="134" font-family="sans-serif" font-size="11" fill="#181A1F">start_date / end_date</text>
-<text x="920" y="154" font-family="sans-serif" font-size="11" fill="#181A1F">registration_opens</text>
-<text x="920" y="174" font-family="sans-serif" font-size="11" fill="#181A1F">registration_closes</text>
+<text x="920" y="154" font-family="sans-serif" font-size="11" fill="#181A1F">registration_opens/closes</text>
+<text x="920" y="174" font-family="sans-serif" font-size="11" fill="#181A1F">withdrawal_closes</text>
 <rect x="910" y="235" width="195" height="134" rx="4" fill="#FFFFFF" stroke="#A59D8E" stroke-width="1.4"/>
 <rect x="910" y="235" width="195" height="26" rx="4" fill="#7D1D2B"/>
 <text x="920" y="252" font-family="monospace" font-size="12" font-weight="bold" fill="#FFFFFF">offering_meetings</text>

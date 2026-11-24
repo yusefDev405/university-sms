@@ -10,3 +10,4 @@ Forward-only numbered SQL migrations live in `db/migrations/` and are tracked in
 | 004 | `004_triggers.sql` | `down/004_triggers.down.sql` | `audit_row()` audit trigger + `promote_waitlist_on_drop()` trigger |
 | 005 | `005_indexes.sql` | `down/005_indexes.down.sql` | Composite, partial, and lookup indexes |
 | 006 | `006_attendance_and_rules.sql` | `down/006_attendance_and_rules.down.sql` | Attendance tables & view, login lockout columns, course audit trigger, term credit-hour cap in `enroll_student()` |
+| 007 | `007_academic_policies.sql` | `down/007_academic_policies.down.sql` | Registration holds (`academic_holds`), `notifications` inbox + triggers, withdrawal `W`, course repeat GPA replacement |

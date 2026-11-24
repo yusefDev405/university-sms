@@ -10,6 +10,19 @@ export async function createEnrollment(req, res, next) {
   }
 }
 
+export async function swapEnrollment(req, res, next) {
+  try {
+    const result = await service.swapEnrollment(
+      req.user.id,
+      req.body.dropEnrollmentId,
+      req.body.targetOfferingId
+    );
+    res.status(201).json({ data: result });
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function dropEnrollment(req, res, next) {
   try {
     await service.dropEnrollment(req.params.id, req.user);
@@ -44,6 +57,15 @@ export async function downloadMyTranscriptPdf(req, res, next) {
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="transcript_${transcript.student.student_number}.pdf"`);
     res.send(pdf);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getMyDegreeAudit(req, res, next) {
+  try {
+    const audit = await service.getMyDegreeAudit(req.user.id);
+    res.json({ data: audit });
   } catch (err) {
     next(err);
   }

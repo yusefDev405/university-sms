@@ -1,7 +1,7 @@
 import { query, withTransaction } from '../../config/db.js';
 
 export async function findStudentByUserId(userId) {
-  const res = await query('SELECT id, user_id, student_number FROM students WHERE user_id = $1', [userId]);
+  const res = await query('SELECT id, user_id, student_number, department_id FROM students WHERE user_id = $1', [userId]);
   return res.rows[0] || null;
 }
 
@@ -24,26 +24,54 @@ export async function enrollStudent(studentId, offeringId, actorUserId) {
   }, { actorUserId });
 }
 
+export async function swapEnrollment(studentId, dropEnrollmentId, targetOfferingId, actorUserId) {
+  return withTransaction(async (tx) => {
+    await tx.query("UPDATE enrollments SET status = 'dropped' WHERE id = $1", [dropEnrollmentId]);
+    const res = await tx.query('SELECT enroll_student($1, $2) AS status', [studentId, targetOfferingId]);
+    const enrollmentRes = await tx.query(
+      `SELECT id, student_id, offering_id, status, enrolled_at
+       FROM enrollments
+       WHERE student_id = $1 AND offering_id = $2`,
+      [studentId, targetOfferingId]
+    );
+    return {
+      status: res.rows[0].status,
+      enrollment: enrollmentRes.rows[0]
+    };
+  }, { actorUserId });
+}
+
 export async function findEnrollmentWithOwner(enrollmentId) {
   const res = await query(
-    `SELECT e.id, e.student_id, e.offering_id, e.status, s.user_id AS student_user_id
+    `SELECT e.id, e.student_id, e.offering_id, e.status, s.user_id AS student_user_id,
+            t.registration_closes, t.withdrawal_closes
      FROM enrollments e
      JOIN students s ON s.id = e.student_id
+     JOIN course_offerings o ON o.id = e.offering_id
+     JOIN terms t ON t.id = o.term_id
      WHERE e.id = $1`,
     [enrollmentId]
   );
   return res.rows[0] || null;
 }
 
-export async function dropEnrollment(enrollmentId, actorUserId) {
+export async function dropOrWithdrawEnrollment(enrollmentId, { withdraw = false }, actorUserId) {
   return withTransaction(async (tx) => {
-    const res = await tx.query(
-      `UPDATE enrollments
-       SET status = 'dropped'
-       WHERE id = $1
-       RETURNING id, student_id, offering_id, status`,
-      [enrollmentId]
-    );
+    const res = withdraw
+      ? await tx.query(
+          `UPDATE enrollments
+           SET status = 'withdrawn', grade_letter = 'W', grade_points = NULL
+           WHERE id = $1
+           RETURNING id, student_id, offering_id, status, grade_letter`,
+          [enrollmentId]
+        )
+      : await tx.query(
+          `UPDATE enrollments
+           SET status = 'dropped'
+           WHERE id = $1
+           RETURNING id, student_id, offering_id, status`,
+          [enrollmentId]
+        );
     return res.rows[0] || null;
   }, { actorUserId });
 }
@@ -61,6 +89,24 @@ export async function listStudentEnrollments(studentId, termId) {
             o.id AS offering_id, o.section, o.room, o.term_id, t.name AS term_name,
             c.id AS course_id, c.code AS course_code, c.title AS course_title, c.credits,
             i.title || ' ' || i.first_name || ' ' || i.last_name AS instructor_name,
+            CASE
+              WHEN e.status = 'waitlisted' THEN (
+                SELECT count(*)::INT
+                FROM enrollments w
+                WHERE w.offering_id = e.offering_id
+                  AND w.status = 'waitlisted'
+                  AND (w.enrolled_at, w.id) <= (e.enrolled_at, e.id)
+              )
+              ELSE NULL
+            END AS waitlist_position,
+            CASE
+              WHEN e.status = 'waitlisted' THEN (
+                SELECT count(*)::INT
+                FROM enrollments w
+                WHERE w.offering_id = e.offering_id AND w.status = 'waitlisted'
+              )
+              ELSE NULL
+            END AS waitlist_total,
             COALESCE(
               (SELECT json_agg(json_build_object(
                  'day_of_week', m.day_of_week,
@@ -78,6 +124,29 @@ export async function listStudentEnrollments(studentId, termId) {
      WHERE e.student_id = $1 ${termFilter}
      ORDER BY t.start_date DESC, c.code ASC`, // sql-safe: parameterized termFilter
     params
+  );
+  return res.rows;
+}
+
+export async function getDegreeAudit(studentId, departmentId) {
+  const res = await query(
+    `SELECT c.id, c.code, c.title, c.credits,
+            EXISTS (
+              SELECT 1 FROM enrollments e
+              JOIN course_offerings o ON o.id = e.offering_id
+              WHERE e.student_id = $1 AND o.course_id = c.id
+                AND e.status = 'completed' AND e.grade_points >= 1.0
+            ) AS is_completed,
+            EXISTS (
+              SELECT 1 FROM enrollments e
+              JOIN course_offerings o ON o.id = e.offering_id
+              WHERE e.student_id = $1 AND o.course_id = c.id
+                AND e.status = 'enrolled'
+            ) AS is_in_progress
+     FROM courses c
+     WHERE c.department_id = $2
+     ORDER BY c.code ASC`,
+    [studentId, departmentId]
   );
   return res.rows;
 }

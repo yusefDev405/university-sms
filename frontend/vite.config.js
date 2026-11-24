@@ -6,6 +6,9 @@ export default defineConfig({
   build: {
     target: 'esnext'
   },
+  test: {
+    environment: 'happy-dom'
+  },
   server: {
     port: 5173,
     proxy: {

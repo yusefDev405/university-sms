@@ -29,8 +29,18 @@ export default function App() {
   const [booting, setBooting] = useState(true);
   const [activePage, setActivePage] = useState('');
   const [toasts, setToasts] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('usms-theme') || 'auto');
+
+  const loadNotifications = useCallback(async () => {
+    try {
+      const res = await apiRequest('/me/notifications');
+      setNotifications(res.data || []);
+    } catch {
+      // ignore if session closed
+    }
+  }, []);
 
   useEffect(() => {
     if (theme === 'auto') {
@@ -67,18 +77,29 @@ export default function App() {
         if (refreshed?.user) {
           setUser(refreshed.user);
           setActivePage(NAV_BY_ROLE[refreshed.user.role]?.[0]?.id || '');
+          await loadNotifications();
         }
       } finally {
         setBooting(false);
       }
     })();
-  }, []);
+  }, [loadNotifications]);
 
   const navItems = useMemo(() => (user ? NAV_BY_ROLE[user.role] || [] : []), [user]);
 
   const handleLoginSuccess = (loggedInUser) => {
     setUser(loggedInUser);
     setActivePage(NAV_BY_ROLE[loggedInUser.role]?.[0]?.id || '');
+    loadNotifications();
+  };
+
+  const handleMarkNotificationRead = async (id) => {
+    try {
+      await apiRequest(`/me/notifications/${id}/read`, { method: 'PATCH' });
+      await loadNotifications();
+    } catch {
+      // ignore
+    }
   };
 
   const handleLogout = async () => {
@@ -115,6 +136,8 @@ export default function App() {
         onLogout={handleLogout}
         theme={theme}
         onToggleTheme={toggleTheme}
+        notifications={notifications}
+        onMarkNotificationRead={handleMarkNotificationRead}
       />
 
       <main className="container main-content" id="top">

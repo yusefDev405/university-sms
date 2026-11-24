@@ -275,4 +275,115 @@ describe('API Integration: Auth, Refresh Rotation, Catalogue, Registration, Grad
     expect(locked.status).toBe(429);
     expect(locked.body.error.code).toBe('ACCOUNT_LOCKED');
   });
+
+  it('supports atomic course swap, room/instructor conflict checks, academic holds, notifications, and degree audit', async () => {
+    const admin = await loginAs('admin@galala.edu.eg', 'AdminPass123!');
+    const student = await loginAs('nadia.mansour@galala.edu.eg', 'Student123!');
+
+    // 1. Room & instructor conflict check when creating overlapping offering
+    const offeringsRes = await request(app)
+      .get('/api/v1/offerings')
+      .set('Authorization', `Bearer ${admin.token}`);
+    const cs201 = offeringsRes.body.data.find((o) => o.course_code === 'CS201' && o.term_name === 'Spring 2027');
+    const cs305 = (await request(app).get('/api/v1/courses?search=CS305').set('Authorization', `Bearer ${admin.token}`)).body.data[0];
+
+    const conflictOffering = await request(app)
+      .post('/api/v1/offerings')
+      .set('Authorization', `Bearer ${admin.token}`)
+      .send({
+        courseId: cs305.id,
+        termId: cs201.term_id,
+        instructorId: cs201.instructor_id,
+        section: '01',
+        capacity: 20,
+        room: 'Hall X-999',
+        meetings: [{ dayOfWeek: 1, startTime: '10:30', endTime: '12:00' }]
+      });
+    expect(conflictOffering.status).toBe(409);
+    expect(conflictOffering.body.error.code).toBe('INSTRUCTOR_CONFLICT');
+
+    // 2. Create non-conflicting CS305 offering, enroll in MATH201, and verify atomic swap rollback + success
+    const cs305OffRes = await request(app)
+      .post('/api/v1/offerings')
+      .set('Authorization', `Bearer ${admin.token}`)
+      .send({
+        courseId: cs305.id,
+        termId: cs201.term_id,
+        instructorId: cs201.instructor_id,
+        section: '01',
+        capacity: 20,
+        room: 'Hall X-999',
+        meetings: [{ dayOfWeek: 5, startTime: '09:00', endTime: '10:30' }]
+      });
+    expect(cs305OffRes.status).toBe(201);
+    const cs305OffId = cs305OffRes.body.data.offering_id;
+
+    const math201Off = offeringsRes.body.data.find((o) => o.course_code === 'MATH201' && o.term_name === 'Spring 2027');
+    const enrMath = await request(app)
+      .post('/api/v1/enrollments')
+      .set('Authorization', `Bearer ${student.token}`)
+      .send({ offeringId: math201Off.offering_id });
+    expect(enrMath.status).toBe(201);
+    const mathEnrollmentId = enrMath.body.data.enrollment.id;
+
+    // Swap fails because CS305 requires CS202; MATH201 stays enrolled!
+    const failedSwap = await request(app)
+      .post('/api/v1/enrollments/swap')
+      .set('Authorization', `Bearer ${student.token}`)
+      .send({ dropEnrollmentId: mathEnrollmentId, targetOfferingId: cs305OffId });
+    expect(failedSwap.status).toBe(409);
+    expect(failedSwap.body.error.code).toBe('PREREQUISITES_NOT_MET');
+
+    const schedAfterFail = await request(app)
+      .get('/api/v1/me/enrollments')
+      .set('Authorization', `Bearer ${student.token}`);
+    expect(schedAfterFail.body.data.some((e) => e.enrollment_id === mathEnrollmentId && e.status === 'enrolled')).toBe(true);
+
+    // Valid atomic swap: MATH201 -> BUS105
+    const bus105Off = offeringsRes.body.data.find((o) => o.course_code === 'BUS105' && o.term_name === 'Spring 2027');
+    const okSwap = await request(app)
+      .post('/api/v1/enrollments/swap')
+      .set('Authorization', `Bearer ${student.token}`)
+      .send({ dropEnrollmentId: mathEnrollmentId, targetOfferingId: bus105Off.offering_id });
+    expect(okSwap.status).toBe(201);
+    expect(okSwap.body.data.status).toBe('enrolled');
+
+    // 3. Notifications (grade-post trigger fired earlier when instructor graded CS201) + Degree Audit
+    const notifs = await request(app)
+      .get('/api/v1/me/notifications')
+      .set('Authorization', `Bearer ${student.token}`);
+    expect(notifs.status).toBe(200);
+    expect(notifs.body.data.length).toBeGreaterThan(0);
+
+    const markRead = await request(app)
+      .patch(`/api/v1/me/notifications/${notifs.body.data[0].id}/read`)
+      .set('Authorization', `Bearer ${student.token}`);
+    expect(markRead.status).toBe(200);
+    expect(markRead.body.data.read_at).toBeTruthy();
+
+    const audit = await request(app)
+      .get('/api/v1/me/degree-audit')
+      .set('Authorization', `Bearer ${student.token}`);
+    expect(audit.status).toBe(200);
+    expect(audit.body.data.totalRequiredCredits).toBeGreaterThan(0);
+
+    // 4. Admin places and resolves hold on Nadia
+    const holdRes = await request(app)
+      .post('/api/v1/holds')
+      .set('Authorization', `Bearer ${admin.token}`)
+      .send({ studentId: student.user.profile.id, reason: 'Registrar verification' });
+    expect(holdRes.status).toBe(201);
+
+    const blockedEnroll = await request(app)
+      .post('/api/v1/enrollments')
+      .set('Authorization', `Bearer ${student.token}`)
+      .send({ offeringId: math201Off.offering_id });
+    expect(blockedEnroll.status).toBe(403);
+    expect(blockedEnroll.body.error.code).toBe('REGISTRATION_HOLD');
+
+    const resolveRes = await request(app)
+      .patch(`/api/v1/holds/${holdRes.body.data.id}/resolve`)
+      .set('Authorization', `Bearer ${admin.token}`);
+    expect(resolveRes.status).toBe(200);
+  });
 });

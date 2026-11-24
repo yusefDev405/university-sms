@@ -1,4 +1,55 @@
 import { query, withTransaction } from '../../config/db.js';
+import { AppError } from '../../utils/errors.js';
+
+async function checkOfferingConflicts(tx, { termId, instructorId, room, meetings, excludeOfferingId = null }) {
+  if (!meetings || meetings.length === 0) return;
+
+  for (const m of meetings) {
+    const instrConflict = await tx.query(
+      `SELECT c.code, o.section
+       FROM offering_meetings om
+       JOIN course_offerings o ON o.id = om.offering_id
+       JOIN courses c ON c.id = o.course_id
+       WHERE o.term_id = $1
+         AND o.instructor_id = $2
+         AND ($3::BIGINT IS NULL OR o.id <> $3)
+         AND om.day_of_week = $4
+         AND om.start_time < $6::TIME
+         AND $5::TIME < om.end_time
+       LIMIT 1`,
+      [termId, instructorId, excludeOfferingId, m.dayOfWeek, m.startTime, m.endTime]
+    );
+    if (instrConflict.rows[0]) {
+      throw new AppError(
+        409,
+        'INSTRUCTOR_CONFLICT',
+        `Instructor already teaches ${instrConflict.rows[0].code} (Sec ${instrConflict.rows[0].section}) at an overlapping time`
+      );
+    }
+
+    const roomConflict = await tx.query(
+      `SELECT c.code, o.section
+       FROM offering_meetings om
+       JOIN course_offerings o ON o.id = om.offering_id
+       JOIN courses c ON c.id = o.course_id
+       WHERE o.term_id = $1
+         AND lower(o.room) = lower($2)
+         AND ($3::BIGINT IS NULL OR o.id <> $3)
+         AND om.day_of_week = $4
+         AND om.start_time < $6::TIME
+         AND $5::TIME < om.end_time
+       LIMIT 1`,
+      [termId, room, excludeOfferingId, m.dayOfWeek, m.startTime, m.endTime]
+    );
+    if (roomConflict.rows[0]) {
+      throw new AppError(
+        409,
+        'ROOM_CONFLICT',
+        `Room ${room} is already booked for ${roomConflict.rows[0].code} (Sec ${roomConflict.rows[0].section}) at that time`
+      );
+    }
+  }
+}
 
 export async function listOfferings({ termId, department, search, instructorUserId, limit, offset }) {
   const conditions = [];
@@ -95,6 +146,13 @@ export async function findOfferingById(offeringId) {
 
 export async function createOffering(data) {
   const createdId = await withTransaction(async (tx) => {
+    await checkOfferingConflicts(tx, {
+      termId: data.termId,
+      instructorId: data.instructorId,
+      room: data.room,
+      meetings: data.meetings || []
+    });
+
     const res = await tx.query(
       `INSERT INTO course_offerings (course_id, term_id, instructor_id, section, capacity, room)
        VALUES ($1, $2, $3, $4, $5, $6)
@@ -118,6 +176,27 @@ export async function createOffering(data) {
 
 export async function updateOffering(id, data) {
   const found = await withTransaction(async (tx) => {
+    const curRes = await tx.query(
+      'SELECT id, term_id, instructor_id, room FROM course_offerings WHERE id = $1 FOR UPDATE',
+      [id]
+    );
+    const current = curRes.rows[0];
+    if (!current) return false;
+
+    const meetingsRes = await tx.query(
+      "SELECT day_of_week AS \"dayOfWeek\", to_char(start_time, 'HH24:MI') AS \"startTime\", to_char(end_time, 'HH24:MI') AS \"endTime\" FROM offering_meetings WHERE offering_id = $1",
+      [id]
+    );
+    const effectiveMeetings = data.meetings !== undefined ? data.meetings : meetingsRes.rows;
+
+    await checkOfferingConflicts(tx, {
+      termId: current.term_id,
+      instructorId: data.instructorId ?? current.instructor_id,
+      room: data.room ?? current.room,
+      meetings: effectiveMeetings,
+      excludeOfferingId: id
+    });
+
     const map = {
       instructorId: 'instructor_id',
       section: 'section',
@@ -135,14 +214,10 @@ export async function updateOffering(id, data) {
 
     if (sets.length > 0) {
       params.push(id);
-      const res = await tx.query(
-        `UPDATE course_offerings SET ${sets.join(', ')} WHERE id = $${params.length} RETURNING id`, // sql-safe: fixed column mapping
+      await tx.query(
+        `UPDATE course_offerings SET ${sets.join(', ')} WHERE id = $${params.length} -- sql-safe: fixed column mapping`,
         params
       );
-      if (!res.rows[0]) return false;
-    } else {
-      const exists = await tx.query('SELECT id FROM course_offerings WHERE id = $1', [id]);
-      if (!exists.rows[0]) return false;
     }
 
     if (data.meetings !== undefined) {

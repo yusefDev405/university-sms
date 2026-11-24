@@ -27,6 +27,9 @@ export function AdminPage({ notify }) {
   const [offerings, setOfferings] = useState([]);
   const [instructors, setInstructors] = useState([]);
   const [report, setReport] = useState({ departments: [], standings: [] });
+  const [holds, setHolds] = useState([]);
+  const [holdStudent, setHoldStudent] = useState(null);
+  const [holdReason, setHoldReason] = useState('');
 
   const [auditLogs, setAuditLogs] = useState([]);
   const [auditMeta, setAuditMeta] = useState({ page: 1, limit: 20, total: 0 });
@@ -112,7 +115,7 @@ export function AdminPage({ notify }) {
     setLoading(true);
     setError('');
     try {
-      const [uRes, dRes, cRes, tRes, oRes, iRes, rRes] = await Promise.all([
+      const [uRes, dRes, cRes, tRes, oRes, iRes, rRes, hRes] = await Promise.all([
         apiRequest('/users?limit=50'),
         apiRequest('/departments'),
         apiRequest('/courses?limit=50'),
@@ -120,9 +123,11 @@ export function AdminPage({ notify }) {
         apiRequest('/offerings?limit=50'),
         apiRequest('/instructors'),
         apiRequest('/reports/enrollment-by-department'),
+        apiRequest('/holds'),
         loadStudents('', 1),
         loadAudit('', 1)
       ]);
+      setHolds(hRes.data || []);
       setUsers(uRes.data || []);
       const depts = dRes.data || [];
       setDepartments(depts);
@@ -212,6 +217,32 @@ export function AdminPage({ notify }) {
       setStudentTranscript(res.data);
     } catch (err) {
       notify(err.message || 'Could not load student transcript', 'error');
+    }
+  };
+
+  const handlePlaceHold = async (e) => {
+    e.preventDefault();
+    if (!holdStudent || !holdReason.trim()) return;
+    try {
+      await apiRequest('/holds', {
+        method: 'POST',
+        body: { studentId: holdStudent.id, reason: holdReason.trim() }
+      });
+      setHoldReason('');
+      notify(`Placed registration hold on ${holdStudent.student_number}.`, 'success');
+      await loadAll();
+    } catch (err) {
+      notify(err.message, 'error');
+    }
+  };
+
+  const handleResolveHold = async (holdId) => {
+    try {
+      await apiRequest(`/holds/${holdId}/resolve`, { method: 'PATCH' });
+      notify('Academic hold resolved.', 'success');
+      await loadAll();
+    } catch (err) {
+      notify(err.message, 'error');
     }
   };
 
@@ -547,13 +578,14 @@ export function AdminPage({ notify }) {
               },
               { key: 'department_code', header: 'Dept' },
               { key: 'gpa', header: 'GPA / Credits', render: (r) => <span className="mono">{r.gpa ?? '—'} ({r.credits_earned} cr)</span> },
-              { key: 'status', header: 'Status', render: (r) => <StatusBadge status={r.status} /> },
+              { key: 'status', header: 'Status', render: (r) => <StatusBadge status={r.active_hold_count > 0 ? 'suspended' : r.status} label={r.active_hold_count > 0 ? `${r.status} (${r.active_hold_count} hold)` : r.status} /> },
               {
                 key: 'actions',
                 header: 'Actions',
                 render: (r) => (
                   <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
                     <button type="button" onClick={() => setEditingStudent({ ...r })}>Edit</button>
+                    <button type="button" onClick={() => setHoldStudent(r)}>Holds</button>
                     <button type="button" className="primary" onClick={() => handleViewStudentTranscript(r.id)}>
                       Transcript
                     </button>
@@ -1261,6 +1293,65 @@ export function AdminPage({ notify }) {
               <button type="submit" className="primary">Update Offering</button>
             </div>
           </form>
+        ) : null}
+      </ModalDialog>
+
+      <ModalDialog
+        open={Boolean(holdStudent)}
+        title={holdStudent ? `Registration Holds — ${holdStudent.student_number}` : 'Academic Holds'}
+        onClose={() => {
+          setHoldStudent(null);
+          setHoldReason('');
+        }}
+      >
+        {holdStudent ? (
+          <div>
+            <p>
+              <strong>{holdStudent.first_name} {holdStudent.last_name}</strong> ({holdStudent.email})
+            </p>
+            <form onSubmit={handlePlaceHold} style={{ marginBlockEnd: '1rem' }}>
+              <div className="field">
+                <label htmlFor="hold-reason">Place New Hold Reason</label>
+                <input
+                  id="hold-reason"
+                  required
+                  minLength={3}
+                  placeholder="e.g. Mandatory academic advising review"
+                  value={holdReason}
+                  onChange={(e) => setHoldReason(e.target.value)}
+                />
+              </div>
+              <button type="submit" className="danger">Place Registration Hold</button>
+            </form>
+            <div style={{ display: 'grid', gap: '0.5rem' }}>
+              {holds.filter((h) => Number(h.student_id) === Number(holdStudent.id)).length === 0 ? (
+                <p className="muted" style={{ margin: 0 }}>No holds recorded for this student.</p>
+              ) : (
+                holds
+                  .filter((h) => Number(h.student_id) === Number(holdStudent.id))
+                  .map((h) => (
+                    <div key={h.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', border: '1px solid var(--border)', padding: '0.5rem 0.65rem', borderRadius: '4px' }}>
+                      <div>
+                        <div>{h.reason}</div>
+                        <small className="muted mono">
+                          {h.resolved_at ? `Resolved ${new Date(h.resolved_at).toLocaleDateString()}` : 'Active Hold'}
+                        </small>
+                      </div>
+                      {!h.resolved_at ? (
+                        <button type="button" className="primary" onClick={() => handleResolveHold(h.id)}>
+                          Resolve
+                        </button>
+                      ) : (
+                        <StatusBadge status="completed" label="Resolved" />
+                      )}
+                    </div>
+                  ))
+              )}
+            </div>
+            <div className="dialog-actions">
+              <button type="button" onClick={() => setHoldStudent(null)}>Close</button>
+            </div>
+          </div>
         ) : null}
       </ModalDialog>
     </section>

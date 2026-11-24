@@ -39,6 +39,9 @@ export function mapPgError(err) {
     if (msg.includes('Student is not active')) {
       return new AppError(403, 'STUDENT_INACTIVE', 'Student account is not active for registration');
     }
+    if (msg.includes('Registration hold active')) {
+      return new AppError(403, 'REGISTRATION_HOLD', 'Registration blocked due to an active academic hold');
+    }
     if (msg.includes('Registration is closed')) {
       return new AppError(403, 'REGISTRATION_CLOSED', 'Registration window for this term is closed');
     }

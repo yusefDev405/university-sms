@@ -47,7 +47,8 @@ export async function listStudents({ department, status, search, instructorUserI
   const rowsRes = await query(
     `SELECT s.id, s.user_id, s.student_number, s.first_name, s.last_name, s.date_of_birth,
             s.department_id, d.code AS department_code, d.name AS department_name,
-            s.status, s.created_at, u.email, g.gpa, COALESCE(g.credits_earned, 0)::INT AS credits_earned
+            s.status, s.created_at, u.email, g.gpa, COALESCE(g.credits_earned, 0)::INT AS credits_earned,
+            (SELECT count(*)::INT FROM academic_holds h WHERE h.student_id = s.id AND h.resolved_at IS NULL) AS active_hold_count
      FROM students s
      JOIN users u ON u.id = s.user_id
      JOIN departments d ON d.id = s.department_id
@@ -65,7 +66,8 @@ export async function findStudentById(studentId) {
   const res = await query(
     `SELECT s.id, s.user_id, s.student_number, s.first_name, s.last_name, s.date_of_birth,
             s.department_id, d.code AS department_code, d.name AS department_name,
-            s.status, s.created_at, u.email, g.gpa, COALESCE(g.credits_earned, 0)::INT AS credits_earned
+            s.status, s.created_at, u.email, g.gpa, COALESCE(g.credits_earned, 0)::INT AS credits_earned,
+            (SELECT count(*)::INT FROM academic_holds h WHERE h.student_id = s.id AND h.resolved_at IS NULL) AS active_hold_count
      FROM students s
      JOIN users u ON u.id = s.user_id
      JOIN departments d ON d.id = s.department_id

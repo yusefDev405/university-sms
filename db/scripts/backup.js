@@ -22,6 +22,8 @@ export const BACKUP_TABLES = [
   'enrollments',
   'attendance_sessions',
   'attendance_records',
+  'academic_holds',
+  'notifications',
   'refresh_tokens',
   'audit_log'
 ];

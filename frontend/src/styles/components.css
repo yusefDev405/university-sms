@@ -756,3 +756,50 @@ dialog::backdrop {
   background: var(--accent);
   block-size: 100%;
 }
+
+.notif-trigger {
+  anchor-name: --notif-btn;
+}
+
+.notif-popover[popover] {
+  position: fixed;
+  inset: auto;
+  inset-block-start: 4rem;
+  inset-block-start: anchor(--notif-btn bottom);
+  inset-inline-end: 1rem;
+  inline-size: min(24rem, calc(100dvw - 2rem));
+  max-block-size: min(26rem, calc(100dvh - 5rem));
+  overflow: auto;
+  padding: 0.85rem;
+  margin-block-start: 0.45rem;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-overlay);
+}
+
+.notif-popover:not(:is(:popover-open, .\:popover-open)) {
+  display: none;
+}
+
+.notif-item {
+  border-block-end: 1px solid var(--border);
+  padding-block: 0.6rem;
+}
+
+.notif-item:last-child {
+  border-block-end: 0;
+}
+
+.prereq-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  padding: 0.12rem 0.45rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+}

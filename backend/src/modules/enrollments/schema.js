@@ -6,6 +6,13 @@ export const createEnrollmentSchema = {
   }).strict()
 };
 
+export const swapEnrollmentSchema = {
+  body: z.object({
+    dropEnrollmentId: z.coerce.number().int().positive(),
+    targetOfferingId: z.coerce.number().int().positive()
+  }).strict()
+};
+
 export const enrollmentIdParamSchema = {
   params: z.object({
     id: z.coerce.number().int().positive()

@@ -3,7 +3,7 @@ import { apiRequest } from '../../api/client.js';
 import { ModalDialog } from '../../components/ModalDialog.jsx';
 import { ResponsiveTable } from '../../components/ResponsiveTable.jsx';
 import { StatusBadge } from '../../components/StatusBadge.jsx';
-import { formatMeetings } from '../../utils/schedule.js';
+import { DAY_NAMES, formatMeetings } from '../../utils/schedule.js';
 
 const GRADE_LETTERS = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
 const ATTENDANCE_STATUSES = ['present', 'late', 'absent', 'excused'];
@@ -278,7 +278,51 @@ export function InstructorOfferingsPage({ notify }) {
       {loading ? (
         <div className="panel" role="status"><p className="muted" style={{ margin: 0 }}>Loading assigned offerings…</p></div>
       ) : (
-        <div className="grid-2" style={{ gridTemplateColumns: 'minmax(16rem, 1fr) minmax(20rem, 2.3fr)', alignItems: 'start' }}>
+        <>
+          <details className="panel" style={{ paddingBlock: '0.8rem' }}>
+            <summary style={{ cursor: 'pointer', fontWeight: 600 }}>
+              Weekly Teaching Timetable ({offerings.filter((o) => o.is_registration_open).length} active-term sections)
+            </summary>
+            <div className="timetable-grid" style={{ marginBlockStart: '0.85rem' }}>
+              {[0, 1, 2, 3, 4].map((dayIdx) => {
+                const slots = [];
+                for (const off of offerings) {
+                  for (const m of off.meetings || []) {
+                    if (Number(m.day_of_week) === dayIdx) {
+                      slots.push({
+                        id: `${off.offering_id}-${m.start_time}`,
+                        code: off.course_code,
+                        section: off.section,
+                        room: off.room,
+                        term: off.term_name,
+                        start: m.start_time,
+                        end: m.end_time
+                      });
+                    }
+                  }
+                }
+                slots.sort((a, b) => a.start.localeCompare(b.start));
+                return (
+                  <div key={dayIdx} className="day-column">
+                    <h3>{DAY_NAMES[dayIdx]}</h3>
+                    {slots.length === 0 ? (
+                      <p className="muted" style={{ fontSize: '0.82rem', margin: 0 }}>No classes</p>
+                    ) : (
+                      slots.map((s) => (
+                        <div key={s.id} className="slot-card">
+                          <div className="mono" style={{ fontWeight: 600 }}>{s.start}–{s.end}</div>
+                          <div><strong>{s.code}</strong> · Sec {s.section}</div>
+                          <div className="muted" style={{ fontSize: '0.78rem' }}>{s.room} · {s.term}</div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </details>
+
+          <div className="grid-2" style={{ gridTemplateColumns: 'minmax(16rem, 1fr) minmax(20rem, 2.3fr)', alignItems: 'start' }}>
           <div className="panel">
             <h2>Assigned Sections</h2>
             {offerings.length === 0 ? (
@@ -483,6 +527,7 @@ export function InstructorOfferingsPage({ notify }) {
             ) : null}
           </div>
         </div>
+        </>
       )}
 
       <ModalDialog

@@ -271,8 +271,14 @@ paths:
       summary: Enroll current student into offering (calls enroll_student PL/pgSQL function)
       responses:
         '201': { description: Enrolled or waitlisted }
-        '403': { description: Registration closed or inactive student }
-        '409': { description: Prerequisites not met, schedule conflict, or already registered }
+        '403': { description: Registration closed, inactive student, or active hold }
+        '409': { description: Prerequisites not met, schedule conflict, credit limit exceeded, or already registered }
+  /enrollments/swap:
+    post:
+      summary: Atomically drop one enrollment and enroll in a target offering in one transaction
+      responses:
+        '201': { description: Swapped successfully }
+        '409': { description: Target enrollment failed; original enrollment preserved }
   /enrollments/{id}:
     delete:
       summary: Drop an enrollment (Own Student or Admin; triggers waitlist promotion)
@@ -303,6 +309,50 @@ paths:
       summary: Current student's attendance summary and recent sessions
       responses:
         '200': { description: Attendance summary }
+  /me/degree-audit:
+    get:
+      summary: Current student's department degree audit progress
+      responses:
+        '200': { description: Completed, in-progress, and remaining department courses }
+  /me/notifications:
+    get:
+      summary: Current user's in-app notifications
+      responses:
+        '200': { description: Notification list }
+  /me/notifications/{id}/read:
+    patch:
+      summary: Mark a notification as read
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Notification marked read }
+  /me/holds:
+    get:
+      summary: Current student's active registration holds
+      responses:
+        '200': { description: Active holds }
+  /holds:
+    get:
+      summary: List all student academic holds (Admin)
+      responses:
+        '200': { description: Holds list }
+    post:
+      summary: Place a registration hold on a student (Admin)
+      responses:
+        '201': { description: Hold placed }
+  /holds/{id}/resolve:
+    patch:
+      summary: Resolve an active registration hold (Admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Hold resolved }
   /offerings/{id}/attendance:
     get:
       summary: Offering attendance sessions and student summary (Own Instructor or Admin)
